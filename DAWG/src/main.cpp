@@ -29,143 +29,112 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);
   delay(10);
 
-  //reset position of servo
+  //reset or starting Sequence needs to be added 
  sitdown();
- delay(3000);
- standup();
- delay(2000);
-
-  /*
-  int Servo0 = 430;
-  int Servo1 = 425;
-  pwm.setPWM(0, 0, Servo0);
-  pwm.setPWM(1 ,0, Servo1);
-  delay(1000);
-  for(int pulslen = Servo1; pulslen>190; pulslen--){
-      pwm.setPWM(1,0,pulslen);
-      delay(1);
-  }
-  for(int pulslen = Servo0; pulslen>320;pulslen--){
-    pwm.setPWM(0,0,pulslen);
-    delay(1);
-  }
-delay (200);
-
-
-  for(int pulslen = 190; pulslen < 315 ;pulslen ++){
-    pwm.setPWM(1,0,pulslen);
-    delay(1);
-  }
-  delay(1000);
-  
-  for(int pulslen = 320; pulslen< 430; pulslen ++){
-    pwm.setPWM(0 ,0 ,pulslen);
-    pwm.setPWM(1 , 0, (pulslen - 5));
-    delay(3);
-  }
- */
 }
 
 void loop() {
-//takeastep();
-for(int i = 0; i<5;i++){
-  takeastep();
-}
-delay(1000);
-punch();
-delay(2000);
-sitdown();
+
 
 
 }
+
+//one step sequence needs optimisation 
 void takeastep(){
   int Servo0 = 430;
   int Servo1 = 425;
   pwm.setPWM(0, 0, Servo0);
-  pwm.setPWM(1 ,0, Servo1);
+  pwm.setPWM(1, 0, Servo1);
   delay(1000);
-  for(int pulslen = Servo1; pulslen>190; pulslen--){
-      pwm.setPWM(1,0,pulslen);
+  for(int pulslen = Servo1; pulslen > 190; pulslen -- ){
+      pwm.setPWM(1, 0, pulslen);
       delay(1);
   }
-  for(int pulslen = Servo0; pulslen>320;pulslen--){
-    pwm.setPWM(0,0,pulslen);
+  for(int pulslen = Servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
     delay(1);
   }
 delay (200);
 
 
-  for(int pulslen = 190; pulslen < 315 ;pulslen ++){
-    pwm.setPWM(1,0,pulslen);
+  for(int pulslen = 190; pulslen < 315 ;pulslen ++ ){
+    pwm.setPWM(1, 0, pulslen);
     delay(1);
   }
   delay(1000);
-  for(int pulslen = 320; pulslen< 430; pulslen ++){
-    pwm.setPWM(0 ,0 ,pulslen);
-    pwm.setPWM(1 , 0, (pulslen - 5));
+  for(int pulslen = 320; pulslen < 430; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
+    pwm.setPWM(1, 0, (pulslen - 5));
     delay(3);
   }
 }
 
+//Sitting down from default standing position 
 void sitdown(){
 int Servo0 = 430;
   int Servo1 = 425;
-  for(int pulslen = Servo0; pulslen <480; pulslen ++ ){
-    pwm.setPWM(0,0,pulslen);
+  for(int pulslen = Servo0; pulslen < 480; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
     delay(2);
   }
-  for(int pulslen = Servo1; pulslen>330; pulslen -- ){
+  for(int pulslen = Servo1; pulslen > 330; pulslen -- ){
     pwm.setPWM(1, 0, pulslen);
     delay(2);
   }
-  for(int pulslen = 480; pulslen <495; pulslen ++ ){
+  for(int pulslen = 480; pulslen < 495; pulslen ++ ){
     pwm.setPWM(0, 0, pulslen);
     delay(2);
   }
 }
 
+//Standup sequence only if DAWG is all the way down 
 void standup(){
   int Servo0 = 495;
   int Servo1 = 330;
-  pwm.setPWM(0,0,Servo0);
-  pwm.setPWM(1,0,Servo1);
-  for( int pulslen = Servo1; pulslen <425; pulslen ++){
-    pwm.setPWM(1,0,pulslen);
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1, 0, Servo1);
+  for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
+    pwm.setPWM(1, 0, pulslen);
     delay(2);
   }
-  for(int pulslen = Servo0;pulslen > 430; pulslen --){
-    pwm.setPWM(0,0,pulslen);
+  for(int pulslen = Servo0; pulslen > 430; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
     delay(2);
   }
 }
 
+// Punch left front 
 void punch(){
+  //check if in default position and goto default 
   int Servo0 = 430;
   int Servo1 = 425;
   pwm.setPWM(0, 0, Servo0);
-  pwm.setPWM(1 ,0, Servo1);
+  pwm.setPWM(1, 0, Servo1);
   delay(50);
-  pwm.setPWM(2,0,265);
+  pwm.setPWM(2, 0, 265);
   delay(1000);
-  pwm.setPWM(2,0,150);
-  
+  //rotate hip
+  pwm.setPWM(2, 0, 150);
   delay(1000);
-  for(int pulslen = Servo1; pulslen>190; pulslen--){
-      pwm.setPWM(1,0,pulslen);
+  //similar to taking a step but without delay 
+  for(int pulslen = Servo1; pulslen > 190; pulslen  -- ){
+      pwm.setPWM(1, 0, pulslen);
   }
-  for(int pulslen = Servo0; pulslen>320;pulslen--){
-    pwm.setPWM(0,0,pulslen);
+  for(int pulslen = Servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
   }
-   for(int pulslen = 190; pulslen < Servo1; pulslen++){
-      pwm.setPWM(1,0,pulslen);
+   for(int pulslen = 190; pulslen < Servo1; pulslen ++ ){
+      pwm.setPWM(1, 0, pulslen);
   }
-  for(int pulslen = 320; pulslen<Servo0 ;pulslen++){
-    pwm.setPWM(0,0,pulslen);
+  for(int pulslen = 320; pulslen < Servo0; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
   }
   delay(1000);
-  pwm.setPWM(2,0,265);
+  //rotating hip back into normal position 
+  pwm.setPWM(2, 0, 265);
 }
 
+// was macht diese Funktion? wird nicht ausgeführt 
 void setServoPulse(uint8_t n, double pulse) {
   double pulselength;
   
