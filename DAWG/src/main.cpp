@@ -13,6 +13,10 @@ uint8_t servonum = 0;
 #define SERVO_FREQ 50
 void Standup();
 void setServoPulse(uint8_t n, double pulse);
+void takeastep();
+void sitdown();
+void standup();
+
 
 void setup() {
   Serial.begin(9600);
@@ -24,7 +28,15 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);
   delay(10);
 
+
   //reset position of servo
+  sitdown();
+  delay(2000);
+  standup();
+
+
+
+  /*
   int Servo0 = 430;
   int Servo1 = 425;
   pwm.setPWM(0, 0, Servo0);
@@ -46,7 +58,7 @@ delay (200);
     delay(1);
   }
   delay(1000);
-  /*
+  
   for(int pulslen = 320; pulslen< 430; pulslen ++){
     pwm.setPWM(0 ,0 ,pulslen);
     pwm.setPWM(1 , 0, (pulslen - 5));
@@ -67,8 +79,12 @@ delay (200);
 }
 
 void loop() {
-  /*
-int Servo0 = 430;
+//takeastep();
+
+
+}
+void takeastep(){
+  int Servo0 = 430;
   int Servo1 = 425;
   pwm.setPWM(0, 0, Servo0);
   pwm.setPWM(1 ,0, Servo1);
@@ -94,10 +110,38 @@ delay (200);
     pwm.setPWM(1 , 0, (pulslen - 5));
     delay(3);
   }
-  */
+}
 
+void sitdown(){
+int Servo0 = 430;
+  int Servo1 = 425;
+  for(int pulslen = Servo0; pulslen <480; pulslen ++ ){
+    pwm.setPWM(0,0,pulslen);
+    delay(2);
+  }
+  for(int pulslen = Servo1; pulslen>330; pulslen -- ){
+    pwm.setPWM(1, 0, pulslen);
+    delay(2);
+  }
+  for(int pulslen = 480; pulslen <495; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
+    delay(2);
+  }
+}
 
-
+void standup(){
+  int Servo0 = 495;
+  int Servo1 = 330;
+  pwm.setPWM(0,0,Servo0);
+  pwm.setPWM(1,0,Servo1);
+  for( int pulslen = Servo1; pulslen <425; pulslen ++){
+    pwm.setPWM(1,0,pulslen);
+    delay(2);
+  }
+  for(int pulslen = Servo0;pulslen > 430; pulslen --){
+    pwm.setPWM(0,0,pulslen);
+    delay(2);
+  }
 }
 
 void setServoPulse(uint8_t n, double pulse) {
