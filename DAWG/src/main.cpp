@@ -56,13 +56,17 @@ void loop() {
 }
 
 void setPositionFromConsole(int servonum){
-
+  while(Serial.available()==0){
+    ServoPosArray[0][servonum] = Serial.parseInt();
+  }
 }
 
 void confirmPos(){
+  int servoNumCounter = 0;
   for(int i = 0; i < 4; i++){
     for(int y = 0; y < 3; y++){
-      pwm.setPWM()
+      pwm.setPWM(servoNumCounter,0,ServoPosArray[i][y]);
+      servoNumCounter++;
     }
   }
 }
@@ -77,5 +81,12 @@ void MenuSetup(){
 
   Serial.print("Neuer Wert Servo 2: ");setPositionFromConsole(1);
   Serial.println("");
+
+  Serial.print("Die Werte übernehmen? (Y/N):");
+  while(Serial.available() == 0){
+    if(Serial.readString() == "y"){
+      confirmPos();
+    }
+  }
 
 }
