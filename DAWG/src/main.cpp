@@ -16,6 +16,7 @@ void setServoPulse(uint8_t n, double pulse);
 void takeastep();
 void sitdown();
 void standup();
+void punch();
 
 
 void setup() {
@@ -28,13 +29,11 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);
   delay(10);
 
-
   //reset position of servo
-  sitdown();
-  delay(2000);
-  standup();
-
-
+ sitdown();
+ delay(3000);
+ standup();
+ delay(2000);
 
   /*
   int Servo0 = 430;
@@ -65,21 +64,17 @@ delay (200);
     delay(3);
   }
  */
-  /*
-  Aufstehen funktioniert nicht gut 
-  delay(10000);
-  for (int pulselen = 0; pulselen < 95; pulselen++) {
-    Servo0 = Servo0 - 1 ;
-    Servo1 = Servo1 + 1 ;
-    pwm.setPWM(1, 0, Servo1);
-    pwm.setPWM(0,0,Servo0);
-    delay(30);
- }
- */
 }
 
 void loop() {
 //takeastep();
+for(int i = 0; i<5;i++){
+  takeastep();
+}
+delay(1000);
+punch();
+delay(2000);
+sitdown();
 
 
 }
@@ -142,6 +137,33 @@ void standup(){
     pwm.setPWM(0,0,pulslen);
     delay(2);
   }
+}
+
+void punch(){
+  int Servo0 = 430;
+  int Servo1 = 425;
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1 ,0, Servo1);
+  delay(50);
+  pwm.setPWM(2,0,265);
+  delay(1000);
+  pwm.setPWM(2,0,150);
+  
+  delay(1000);
+  for(int pulslen = Servo1; pulslen>190; pulslen--){
+      pwm.setPWM(1,0,pulslen);
+  }
+  for(int pulslen = Servo0; pulslen>320;pulslen--){
+    pwm.setPWM(0,0,pulslen);
+  }
+   for(int pulslen = 190; pulslen < Servo1; pulslen++){
+      pwm.setPWM(1,0,pulslen);
+  }
+  for(int pulslen = 320; pulslen<Servo0 ;pulslen++){
+    pwm.setPWM(0,0,pulslen);
+  }
+  delay(1000);
+  pwm.setPWM(2,0,265);
 }
 
 void setServoPulse(uint8_t n, double pulse) {
