@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
+#include "defines.h"
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -11,6 +12,9 @@ uint8_t servonum = 0;
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50
+
+void setPositionFromConsole(int servonum);
+void MenuSetup();
 
 void setup() {
   Serial.begin(9600);
@@ -49,4 +53,40 @@ void loop() {
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
     pwm.setPWM(servonum, 0, pulselen);
   }
+}
+
+void setPositionFromConsole(int servonum){
+  while(Serial.available()==0){
+    ServoPosArray[0][servonum] = Serial.parseInt();
+  }
+}
+
+void confirmPos(){
+  int servoNumCounter = 0;
+  for(int i = 0; i < 4; i++){
+    for(int y = 0; y < 3; y++){
+      pwm.setPWM(servoNumCounter,0,ServoPosArray[i][y]);
+      servoNumCounter++;
+    }
+  }
+}
+
+void MenuSetup(){
+  Serial.println("Menü zur Kontrolle von DAWG");
+  Serial.println("Aktuelle Werte Servos:");
+  //Werte müssen noch ergänzt werden
+  Serial.println("\t1\t2\t3");
+  Serial.print("Neuer Wert Servo 1: ");setPositionFromConsole(0);
+  Serial.println("");
+
+  Serial.print("Neuer Wert Servo 2: ");setPositionFromConsole(1);
+  Serial.println("");
+
+  Serial.print("Die Werte übernehmen? (Y/N):");
+  while(Serial.available() == 0){
+    if(Serial.readString() == "y"){
+      confirmPos();
+    }
+  }
+
 }
