@@ -11,6 +11,8 @@ uint8_t servonum = 0;
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50
+void Standup();
+void setServoPulse(uint8_t n, double pulse);
 
 void setup() {
   Serial.begin(9600);
@@ -22,24 +24,26 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);
   delay(10);
 
-}
+  //reset position of servo
 
-void setServoPulse(uint8_t n, double pulse) {
-  double pulselength;
-  
-  pulselength = 1000000;   // 1,000,000 us per second
-  pulselength /= SERVO_FREQ;   // Analog servos run at ~60 Hz updates
-  Serial.print(pulselength); Serial.println(" us per period"); 
-  pulselength /= 4096;  // 12 bits of resolution
-  Serial.print(pulselength); Serial.println(" us per bit"); 
-  pulse *= 1000000;  // convert input seconds to us
-  pulse /= pulselength;
-  Serial.println(pulse);
-  pwm.setPWM(n, 0, pulse);
+  int Servo0 = 515;
+  int Servo1 = 330;
+  pwm.setPWM(0, 0, 515);
+  pwm.setPWM(1 ,0, 330);
+  /*
+  delay(10000);
+  for (int pulselen = 0; pulselen < 95; pulselen++) {
+    Servo0 = Servo0 - 1 ;
+    Servo1 = Servo1 + 1 ;
+    pwm.setPWM(1, 0, Servo1);
+    pwm.setPWM(0,0,Servo0);
+    delay(30);
+ }
+ */
 }
 
 void loop() {
-
+/*
   Serial.println(servonum);
   for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
     pwm.setPWM(servonum, 0, pulselen);
@@ -67,4 +71,21 @@ void loop() {
 
   servonum++;
   if (servonum > 7) servonum = 0;
+  */
+
+
+}
+
+void setServoPulse(uint8_t n, double pulse) {
+  double pulselength;
+  
+  pulselength = 1000000;   // 1,000,000 us per second
+  pulselength /= SERVO_FREQ;   // Analog servos run at ~60 Hz updates
+  Serial.print(pulselength); Serial.println(" us per period"); 
+  pulselength /= 4096;  // 12 bits of resolution
+  Serial.print(pulselength); Serial.println(" us per bit"); 
+  pulse *= 1000000;  // convert input seconds to us
+  pulse /= pulselength;
+  Serial.println(pulse);
+  //pwm.setPWM(n, 0, pulse);
 }
