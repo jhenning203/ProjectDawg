@@ -1,0 +1,27 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "C/C++: avr-gcc Aktive Datei kompilieren",
+			"command": "/Users/jannishenning/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"${file}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}",
+				"-mmcu=atmega328p",
+				""
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "Compiler: /Users/jannishenning/.platformio/packages/toolchain-atmelavr/bin/avr-gcc"
+		}
+	]
+}
