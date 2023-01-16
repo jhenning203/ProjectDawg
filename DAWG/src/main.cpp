@@ -25,12 +25,36 @@ void setup() {
   delay(10);
 
   //reset position of servo
+  int Servo0 = 430;
+  int Servo1 = 425;
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1 ,0, Servo1);
+  delay(1000);
+  for(int pulslen = Servo1; pulslen>190; pulslen--){
+      pwm.setPWM(1,0,pulslen);
+      delay(1);
+  }
+  for(int pulslen = Servo0; pulslen>320;pulslen--){
+    pwm.setPWM(0,0,pulslen);
+    delay(1);
+  }
+delay (200);
 
-  int Servo0 = 515;
-  int Servo1 = 330;
-  pwm.setPWM(0, 0, 515);
-  pwm.setPWM(1 ,0, 330);
+
+  for(int pulslen = 190; pulslen < 315 ;pulslen ++){
+    pwm.setPWM(1,0,pulslen);
+    delay(1);
+  }
+  delay(1000);
   /*
+  for(int pulslen = 320; pulslen< 430; pulslen ++){
+    pwm.setPWM(0 ,0 ,pulslen);
+    pwm.setPWM(1 , 0, (pulslen - 5));
+    delay(3);
+  }
+ */
+  /*
+  Aufstehen funktioniert nicht gut 
   delay(10000);
   for (int pulselen = 0; pulselen < 95; pulselen++) {
     Servo0 = Servo0 - 1 ;
@@ -43,35 +67,35 @@ void setup() {
 }
 
 void loop() {
-/*
-  Serial.println(servonum);
-  for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-    pwm.setPWM(servonum, 0, pulselen);
+  /*
+int Servo0 = 430;
+  int Servo1 = 425;
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1 ,0, Servo1);
+  delay(1000);
+  for(int pulslen = Servo1; pulslen>190; pulslen--){
+      pwm.setPWM(1,0,pulslen);
+      delay(1);
   }
-
-  delay(500);
-  for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-    pwm.setPWM(servonum, 0, pulselen);
+  for(int pulslen = Servo0; pulslen>320;pulslen--){
+    pwm.setPWM(0,0,pulslen);
+    delay(1);
   }
+delay (200);
 
-  delay(500);
 
-  // Drive each servo one at a time using writeMicroseconds(), it's not precise due to calculation rounding!
-  // The writeMicroseconds() function is used to mimic the Arduino Servo library writeMicroseconds() behavior. 
-  for (uint16_t microsec = USMIN; microsec < USMAX; microsec++) {
-    pwm.writeMicroseconds(servonum, microsec);
+  for(int pulslen = 190; pulslen < 315 ;pulslen ++){
+    pwm.setPWM(1,0,pulslen);
+    delay(1);
   }
-
-  delay(500);
-  for (uint16_t microsec = USMAX; microsec > USMIN; microsec--) {
-    pwm.writeMicroseconds(servonum, microsec);
+  delay(1000);
+  for(int pulslen = 320; pulslen< 430; pulslen ++){
+    pwm.setPWM(0 ,0 ,pulslen);
+    pwm.setPWM(1 , 0, (pulslen - 5));
+    delay(3);
   }
-
-  delay(500);
-
-  servonum++;
-  if (servonum > 7) servonum = 0;
   */
+
 
 
 }
