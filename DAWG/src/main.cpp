@@ -12,6 +12,12 @@ uint8_t servonum = 0;
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50
+#define AusgestrecktS1 190
+#define AusgestrecktS2 310
+#define TiefS1 330
+#define Tiefs2 495
+#define VorneS1 315
+#define Vorne 320
 
 void setPositionFromConsole(int servonum);
 void MenuSetup();
@@ -27,20 +33,6 @@ void setup() {
   pwm.setPWMFreq(SERVO_FREQ);
   delay(10);
 
-}
-
-void setServoPulse(uint8_t n, double pulse) {
-  double pulselength;
-  
-  pulselength = 1000000;   // 1,000,000 us per second
-  pulselength /= SERVO_FREQ;   // Analog servos run at ~60 Hz updates
-  Serial.print(pulselength); Serial.println(" us per period"); 
-  pulselength /= 4096;  // 12 bits of resolution
-  Serial.print(pulselength); Serial.println(" us per bit"); 
-  pulse *= 1000000;  // convert input seconds to us
-  pulse /= pulselength;
-  Serial.println(pulse);
-  pwm.setPWM(n, 0, pulse);
 }
 
 void loop() {
@@ -93,16 +85,33 @@ void MenuSetup(){
 }
 
 void walkforeward() {
-  for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-    pwm.setPWM(servonum, 0, pulselen);
-  }
-  delay(2000); 
   
-  for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-    pwm.setPWM(servonum, 0, pulselen);
-  } 
-  Serial.println("Test");
+    pwm.setPWM(0, 0, 390);
+    pwm.setPWM(1, 0, 420);
+    delay(1000);
+
+    pwm.setPWM(0, 0, 310);
+    pwm.setPWM(1, 0, 379);
+
+    delay(1000);
+
+
+    
 }
 
+///////////////////////////////////////////
+//UNUSED SAVE FOR LATER
 
-
+void setServoPulse(uint8_t n, double pulse) {
+  double pulselength;
+  
+  pulselength = 1000000;   // 1,000,000 us per second
+  pulselength /= SERVO_FREQ;   // Analog servos run at ~60 Hz updates
+  Serial.print(pulselength); Serial.println(" us per period"); 
+  pulselength /= 4096;  // 12 bits of resolution
+  Serial.print(pulselength); Serial.println(" us per bit"); 
+  pulse *= 1000000;  // convert input seconds to us
+  pulse /= pulselength;
+  Serial.println(pulse);
+  pwm.setPWM(n, 0, pulse);
+}
