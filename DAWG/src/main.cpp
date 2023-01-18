@@ -15,6 +15,7 @@ uint8_t servonum = 0;
 
 void setPositionFromConsole(int servonum);
 void MenuSetup();
+void walkforeward();
 
 void setup() {
   Serial.begin(9600);
@@ -44,15 +45,16 @@ void setServoPulse(uint8_t n, double pulse) {
 
 void loop() {
 
-  Serial.println(servonum);
-  for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
+ // Serial.println(servonum);
+  /*for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
     pwm.setPWM(servonum, 0, pulselen);
   }
 
   delay(500);
   for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
     pwm.setPWM(servonum, 0, pulselen);
-  }
+  } */
+  walkforeward();
 }
 
 void setPositionFromConsole(int servonum){
@@ -86,7 +88,21 @@ void MenuSetup(){
   while(Serial.available() == 0){
     if(Serial.readString() == "y"){
       confirmPos();
-    }
+   } 
   }
-
 }
+
+void walkforeward() {
+  for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
+    pwm.setPWM(servonum, 0, pulselen);
+  }
+  delay(2000); 
+  
+  for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
+    pwm.setPWM(servonum, 0, pulselen);
+  } 
+  Serial.println("Test");
+}
+
+
+
