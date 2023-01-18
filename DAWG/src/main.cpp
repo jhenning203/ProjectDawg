@@ -101,10 +101,10 @@ void setServoPositionFromConsole(int servonum){
   while(Serial.available() == 0){
     ServoPosArray[0][servonum] = Serial.parseInt();
   }
-  Serial.println((String)"Eingabe für Servo " + servonum + (String)" übernommen, neuer Wert: " + ServoPosArray[0][servonum]);
-
   //trash wird genutzt, um floating 0 im Rx Serial Buffer abzufangen
   int trash = Serial.parseInt();
+  //Neuen Wert im Serial monitor anzeigen
+  Serial.println((String)"Eingabe für Servo " + servonum + (String)" übernommen, neuer Wert: " + ServoPosArray[0][servonum]);
 }
 
 //anstatt servonum muss als parameter noch der fuß übernommen werden
