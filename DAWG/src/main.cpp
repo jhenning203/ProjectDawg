@@ -7,6 +7,13 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 uint8_t servonum = 0;
 
+///////////////////////////////////////////////////////////////////////////////
+//WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
+#define DAWID     01
+#define VINCENT   0
+#define JANNIS    0
+////////////////////////////////////////////////////////////////////////////////
+
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
 #define SERVOMAX  600 // This is the 'maximum' pulse length count (out of 4096)
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
@@ -19,41 +26,65 @@ uint8_t servonum = 0;
 #define VorneS1 315
 #define Vorne 320
 
-void setPositionFromConsole(int servonum);
 void MenuSetup();
+void setServoPositionFromConsole(int servonum);
+void setLegPositionFromConsole(int servonum);
+void setLegPosition(int leg, int servo0, int servo1, int servo2);
+
 void walkforeward();
 
+
 void setup() {
+  ////////////////////////////////////////////////////
+  //DO NOT CHANGE
+  //init of Serial connection with according baudrate
   Serial.begin(9600);
-  Serial.println("8 channel Servo test!");
-
+  //Adafruit PWM lib init
   pwm.begin();
-
   pwm.setOscillatorFrequency(27000000);
+  //set PWM to 50 Hz
   pwm.setPWMFreq(SERVO_FREQ);
-  delay(10);
+  //DO NOT CHANGE
+  ///////////////////////////////////////////
 
+  #if DAWID
+  setLegPosition(1,400,400,0);
+  MenuSetup();
+  #endif
+
+  #if JANNIS
+
+  #endif
+
+  #if VINCENT
+  #endif
+  delay(10);
 }
 
 void loop() {
-
- // Serial.println(servonum);
-  /*for (uint16_t pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-    pwm.setPWM(servonum, 0, pulselen);
-  }
-
-  delay(500);
-  for (uint16_t pulselen = SERVOMAX; pulselen > SERVOMIN; pulselen--) {
-    pwm.setPWM(servonum, 0, pulselen);
-  } */
+  //@JANNIS DEIN CODE HIER REIN
+  #if JANNIS 
   walkforeward();
+  #endif
+  //JANNIS CODE ENDE
+  /////////////////////////////
+  //@VINCENT DEIN CODE HIER REIN
+  #if VINCENT 
+
+  #endif
+  //VINCENT CODE ENDE
+  /////////////////////////////
+  //DAWID CODE
+  #if DAWID 
+    setLegPositionFromConsole(0);
+  #endif
+  //DAWID CODE ENDE
+  ////////////////////////////
 }
 
-void setPositionFromConsole(int servonum){
-  while(Serial.available()==0){
-    ServoPosArray[0][servonum] = Serial.parseInt();
-  }
-}
+
+/////////////////////////////////////////////////////////////////
+//Functions written by Dawid Wilczewski START
 
 void confirmPos(){
   int servoNumCounter = 0;
@@ -65,24 +96,75 @@ void confirmPos(){
   }
 }
 
-void MenuSetup(){
-  Serial.println("Menü zur Kontrolle von DAWG");
-  Serial.println("Aktuelle Werte Servos:");
-  //Werte müssen noch ergänzt werden
-  Serial.println("\t1\t2\t3");
-  Serial.print("Neuer Wert Servo 1: ");setPositionFromConsole(0);
-  Serial.println("");
-
-  Serial.print("Neuer Wert Servo 2: ");setPositionFromConsole(1);
-  Serial.println("");
-
-  Serial.print("Die Werte übernehmen? (Y/N):");
+void setServoPositionFromConsole(int servonum){
+  //Schleife wird durchlaufen, bis Daten im Serial Rx Buffer ankommen
   while(Serial.available() == 0){
-    if(Serial.readString() == "y"){
+    ServoPosArray[0][servonum] = Serial.parseInt();
+  }
+  Serial.println((String)"Eingabe für Servo " + servonum + (String)" übernommen, neuer Wert: " + ServoPosArray[0][servonum]);
+
+  //trash wird genutzt, um floating 0 im Rx Serial Buffer abzufangen
+  int trash = Serial.parseInt();
+}
+
+//anstatt servonum muss als parameter noch der fuß übernommen werden
+void setLegPositionFromConsole(int servonum){
+
+  Serial.println("Aktuelle Werte Servos:");
+  Serial.println("\t1\t2\t3");
+  Serial.println((String)"\t" + ServoPosArray[0][0] + (String)"\t" + ServoPosArray[0][1] + (String)"\t" + ServoPosArray[0][2]);
+
+  Serial.println("Eingabe Neuer Wert für Servo 0(Oberschenkel): ");   setServoPositionFromConsole(0);
+  Serial.println("Eingabe Neuer Wert für Servo 1(Steuerarm): ");      setServoPositionFromConsole(1);
+  //Serial.println("Eingabe Neuer Wert für Servo 2(Hüftdrehung): ");    setServoPositionFromConsole(2);
+
+  Serial.println("Aktuelle Werte Servos:");
+  Serial.println("\t1\t2\t3");
+  Serial.println((String)"\t" + ServoPosArray[0][0] + (String)"\t" + ServoPosArray[0][1] + (String)"\t" + ServoPosArray[0][2]);
+
+  Serial.println("Neue Werte jetzt übernehmen? 1 für JA / RESET Für Wiederholte Eingabe der Werte");
+  while(Serial.available() == 0){
+    if (Serial.parseInt() == 1)
+    {
       confirmPos();
-   } 
+      Serial.println("Neue Werte von Servos übernommen");
+    }  
   }
 }
+
+void MenuSetup(){
+  Serial.println("Menü zur Kontrolle von DAWG");
+  setLegPositionFromConsole(0);
+}
+
+//Funktion zum ändern aller Werte am Servo eines Beins
+void setLegPosition(int leg, int servo0, int servo1, int servo2){
+
+  //leg = 1   links vorn
+  //leg = 2   rechts vorn
+  //leg = 3   links hinten
+  //leg = 4   rechts hinten
+
+  int servobyleg = 0;
+
+  //Wahl des entsprechenden Fußes
+  switch (leg)
+  {
+  case 1: break;
+  case 2: servobyleg += 4; break;
+  case 3: servobyleg += 8; break;
+  case 4: servobyleg += 12;break;
+  default:
+    break;
+  }
+
+  //3. servo noch nicht drin, zunächst nicht wichtig
+  pwm.setPWM(servobyleg,0,servo0);
+  pwm.setPWM(servobyleg+1,0,servo1);
+}
+
+//Funtions written by Dawid END
+////////////////////////////////////////////////////////////////
 
 void walkforeward() {
   
@@ -100,7 +182,7 @@ void walkforeward() {
 }
 
 ///////////////////////////////////////////
-//UNUSED SAVE FOR LATER
+//UNUSED SAVED FOR LATER
 
 void setServoPulse(uint8_t n, double pulse) {
   double pulselength;
