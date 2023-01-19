@@ -27,6 +27,7 @@ uint8_t servonum = 0;
 #define Vorne 320
 
 void MenuSetup();
+void showServoValuesToConcole();
 void setServoPositionFromConsole(int servonum);
 void setLegPositionFromConsole(int servonum);
 void setLegPosition(int leg, int servo0, int servo1, int servo2);
@@ -86,6 +87,18 @@ void loop() {
 /////////////////////////////////////////////////////////////////
 //Functions written by Dawid Wilczewski START
 
+void showServoValuesToConcole(){
+  //aktuelle Servowerte des Arrays im Serial monitor anzeigen
+  Serial.println("Aktuelle Werte Servos:");
+  for(int y = 0; y < 4; y++){
+    //Serial.println((String)"\t" + 0 + (String)"\t" + 1 + (String)"\t" + 2);
+    for(int i = 0; i < 3; i++){      
+      Serial.print((String)"\t" + ServoPosArray[y][i]);
+    }
+    Serial.println("");
+  }
+}
+
 void confirmPos(){
   int servoNumCounter = 0;
   for(int i = 0; i < 4; i++){
@@ -112,14 +125,8 @@ void setServoPositionFromConsole(int servonum){
 //anstatt servonum muss als parameter noch der fuß übernommen werden
 void setLegPositionFromConsole(int servonum){
 
-  Serial.println("Aktuelle Werte Servos:");
-  for(int y = 0; y < 4; y++){
-    //Serial.println((String)"\t" + 0 + (String)"\t" + 1 + (String)"\t" + 2);
-    for(int i = 0; i < 3; i++){      
-      Serial.println((String)"\t" + ServoPosArray[y][i] + (String)"\t" + ServoPosArray[y][i] + (String)"\t" + ServoPosArray[y][i]);
-    }
-  }
-
+  showServoValuesToConcole();
+  
   Serial.println("Eingabe Neuer Wert für Servo 0(Oberschenkel): ");   setServoPositionFromConsole(0);
   Serial.println("Eingabe Neuer Wert für Servo 1(Steuerarm): ");      setServoPositionFromConsole(1);
   //Serial.println("Eingabe Neuer Wert für Servo 2(Hüftdrehung): ");    setServoPositionFromConsole(2);
