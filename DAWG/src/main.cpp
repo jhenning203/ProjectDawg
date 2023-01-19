@@ -48,8 +48,8 @@ void setup() {
   ///////////////////////////////////////////
 
   #if DAWID
-  setLegPosition(1,400,400,0);
-  MenuSetup();
+    setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
+    MenuSetup();
   #endif
 
   #if JANNIS
@@ -97,12 +97,14 @@ void confirmPos(){
 }
 
 void setServoPositionFromConsole(int servonum){
+
+  //trash wird genutzt, um Müll im Rx Serial Buffer abzufangen
+  int trash = Serial.read();
   //Schleife wird durchlaufen, bis Daten im Serial Rx Buffer ankommen
   while(Serial.available() == 0){
     ServoPosArray[0][servonum] = Serial.parseInt();
   }
-  //trash wird genutzt, um floating 0 im Rx Serial Buffer abzufangen
-  int trash = Serial.parseInt();
+  trash = Serial.read();
   //Neuen Wert im Serial monitor anzeigen
   Serial.println((String)"Eingabe für Servo " + servonum + (String)" übernommen, neuer Wert: " + ServoPosArray[0][servonum]);
 }
@@ -111,8 +113,12 @@ void setServoPositionFromConsole(int servonum){
 void setLegPositionFromConsole(int servonum){
 
   Serial.println("Aktuelle Werte Servos:");
-  Serial.println("\t1\t2\t3");
-  Serial.println((String)"\t" + ServoPosArray[0][0] + (String)"\t" + ServoPosArray[0][1] + (String)"\t" + ServoPosArray[0][2]);
+  for(int y = 0; y < 4; y++){
+    //Serial.println((String)"\t" + 0 + (String)"\t" + 1 + (String)"\t" + 2);
+    for(int i = 0; i < 3; i++){      
+      Serial.println((String)"\t" + ServoPosArray[y][i] + (String)"\t" + ServoPosArray[y][i] + (String)"\t" + ServoPosArray[y][i]);
+    }
+  }
 
   Serial.println("Eingabe Neuer Wert für Servo 0(Oberschenkel): ");   setServoPositionFromConsole(0);
   Serial.println("Eingabe Neuer Wert für Servo 1(Steuerarm): ");      setServoPositionFromConsole(1);
