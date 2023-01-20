@@ -199,6 +199,133 @@ void walkforeward() {
 
 }
 
+//one step sequence needs optimisation
+void takeastep(int leg){
+  //leg = 1   links vorn
+  //leg = 2   rechts vorn
+  //leg = 3   links hinten
+  //leg = 4   rechts hinten
+
+  // Servobyleg + 0 = unterer Servo 
+  // Servobyleg + 1 = oberer Servo 
+  // Servobyleg + 2 = Bein rotation 
+
+  int servobyleg = 0;
+
+  //Wahl des entsprechenden Fußes
+  switch (leg)
+  {
+  case 1: break;
+  case 2: servobyleg += 4; break;
+  case 3: servobyleg += 8; break;
+  case 4: servobyleg += 12;break;
+  default:
+    break;
+  }
+  int Servo0 = 430;
+  int Servo1 = 425;
+  pwm.setPWM(servobyleg, 0, Servo0);
+  pwm.setPWM(servobyleg + 1, 0, Servo1);
+  delay(1000);
+  for(int pulslen = Servo1; pulslen > 190; pulslen -- ){
+      pwm.setPWM(servobyleg + 1, 0, pulslen);
+      delay(1);
+  }
+  for(int pulslen = Servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(servobyleg, 0, pulslen);
+    delay(1);
+  }
+delay (100);
+
+
+  for(int pulslen = 190; pulslen < 315 ;pulslen ++ ){
+    pwm.setPWM(servobyleg + 1, 0, pulslen);
+    delay(1);
+  }
+  delay(1000);
+  for(int pulslen = 320; pulslen < 430; pulslen ++ ){
+    pwm.setPWM(servobyleg, 0, pulslen);
+    pwm.setPWM(servobyleg + 1, 0, (pulslen - 5));
+    delay(3);
+  }
+}
+
+//Sitting down from default standing position 
+//For all 4 legs
+void sitdown(){
+int Servo0 = 430;
+  int Servo1 = 425;
+  for(int pulslen = Servo0; pulslen < 480; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
+    pwm.setPWM(4, 0, pulslen);
+    pwm.setPWM(8, 0, pulslen);
+    pwm.setPWM(12, 0, pulslen);
+    delay(2);
+  }
+  for(int pulslen = Servo1; pulslen > 330; pulslen -- ){
+    pwm.setPWM(1, 0, pulslen);
+    pwm.setPWM(5, 0, pulslen);
+    pwm.setPWM(9, 0, pulslen);
+    pwm.setPWM(13, 0, pulslen);
+    delay(2);
+  }
+  for(int pulslen = 480; pulslen < 495; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
+    pwm.setPWM(4, 0, pulslen);
+    pwm.setPWM(8, 0, pulslen);
+    pwm.setPWM(12, 0, pulslen);
+    delay(2);
+  }
+}
+
+//Standup sequence only if DAWG is all the way down 
+void standup(){
+  int Servo0 = 495;
+  int Servo1 = 330;
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1, 0, Servo1);
+  for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
+    pwm.setPWM(1, 0, pulslen);
+    delay(4);
+  }
+  for(int pulslen = Servo0; pulslen > 430; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
+    delay(4);
+  }
+}
+
+// Punch left front 
+void punch(){
+  //check if in default position and goto default 
+  int Servo0 = 430;
+  int Servo1 = 425;
+  pwm.setPWM(0, 0, Servo0);
+  pwm.setPWM(1, 0, Servo1);
+  delay(50);
+  pwm.setPWM(2, 0, 265);
+  delay(1000);
+  //rotate hip
+  pwm.setPWM(2, 0, 150);
+  delay(1000);
+  //similar to taking a step but without delay 
+  for(int pulslen = Servo1; pulslen > 190; pulslen  -- ){
+      pwm.setPWM(1, 0, pulslen);
+  }
+  for(int pulslen = Servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
+  }
+   for(int pulslen = 190; pulslen < Servo1; pulslen ++ ){
+      pwm.setPWM(1, 0, pulslen);
+  }
+  for(int pulslen = 320; pulslen < Servo0; pulslen ++ ){
+    pwm.setPWM(0, 0, pulslen);
+  }
+  delay(1000);
+  //rotating hip back into normal position 
+  pwm.setPWM(2, 0, 265);
+}
+
+
 ///////////////////////////////////////////
 //UNUSED SAVED FOR LATER
 
