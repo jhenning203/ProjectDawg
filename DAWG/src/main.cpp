@@ -9,8 +9,8 @@ uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
-#define DAWID     01
-#define VINCENT   0
+#define DAWID     0
+#define VINCENT   1
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +37,7 @@ void takeastep (int leg);
 void sitdown();
 void standup();
 void punch();
-
+void standardpos();
 
 void setup() {
   ////////////////////////////////////////////////////
@@ -62,11 +62,15 @@ void setup() {
   #endif
 
   #if VINCENT
+  
+
   #endif
   delay(10);
 }
 
 void loop() {
+
+  
   //@JANNIS DEIN CODE HIER REIN
   #if JANNIS 
   walkforeward();
@@ -75,7 +79,7 @@ void loop() {
   /////////////////////////////
   //@VINCENT DEIN CODE HIER REIN
   #if VINCENT 
-
+  //pwm.setPWM(0,0,500);
   #endif
   //VINCENT CODE ENDE
   /////////////////////////////
@@ -86,7 +90,23 @@ void loop() {
   //DAWID CODE ENDE
   ////////////////////////////
 }
-
+/////////////////////////////////////////////////////////
+// Function for Leg calibration
+void standardpos(int leg){
+  int servobyleg = 0;
+  switch (leg)
+  {
+  case 1: break;
+  case 2: servobyleg += 4; break;
+  case 3: servobyleg += 8; break;
+  case 4: servobyleg += 12;break;
+  default:
+    break;
+  }
+  pwm.setPWM(0,0,425);
+  pwm.setPWM(1,0,425);
+  pwm.setPWM(2,0,300);
+}
 
 /////////////////////////////////////////////////////////////////
 //Functions written by Dawid Wilczewski START
@@ -284,6 +304,13 @@ void standup(){
   int Servo1 = 330;
   pwm.setPWM(0, 0, Servo0);
   pwm.setPWM(1, 0, Servo1);
+  pwm.setPWM(2, 0, Servo0);
+  pwm.setPWM(4, 0, Servo0);
+  pwm.setPWM(6, 0, Servo0);
+  pwm.setPWM(9, 0, Servo0);
+  pwm.setPWM(10, 0, Servo0);
+  pwm.setPWM(12, 0, Servo0);
+  pwm.setPWM(13, 0, Servo0);
   for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
     pwm.setPWM(1, 0, pulslen);
     delay(4);
@@ -322,7 +349,7 @@ void punch(){
   }
   delay(1000);
   //rotating hip back into normal position 
-  pwm.setPWM(2, 0, 265);
+  pwm.setPWM(2, 0, 300);
 }
 
 
@@ -342,19 +369,3 @@ void setServoPulse(uint8_t n, double pulse) {
   Serial.println(pulse);
   pwm.setPWM(n, 0, pulse);
 }
-<<<<<<< Updated upstream
-=======
-
-void loop() {
-
-  Serial.println(servonum);
-  for (int pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
-    pwm.setPWM(0, 0, pulselen);
-    pwm.setPWM(1, 0, pulselen);
-    delay(10);
-  }
-
- 
-}
-
->>>>>>> Stashed changes
