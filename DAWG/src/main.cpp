@@ -33,6 +33,10 @@ void setLegPositionFromConsole(int servonum);
 void setLegPosition(int leg, int servo0, int servo1, int servo2);
 
 void walkforeward();
+void takeastep (int leg);
+void sitdown();
+void standup();
+void punch();
 
 
 void setup() {
@@ -45,7 +49,6 @@ void setup() {
   pwm.setOscillatorFrequency(27000000);
   //set PWM to 50 Hz
   pwm.setPWMFreq(SERVO_FREQ);
-<<<<<<< Updated upstream
   //DO NOT CHANGE
   ///////////////////////////////////////////
 
@@ -60,12 +63,6 @@ void setup() {
 
   #if VINCENT
   #endif
-=======
-  
-  pwm.setPWM(0,0,150);
-  pwm.setPWM(1,0,150);
-
->>>>>>> Stashed changes
   delay(10);
 }
 
@@ -132,7 +129,6 @@ void setServoPositionFromConsole(int servonum){
 //anstatt servonum muss als parameter noch der fuß übernommen werden
 void setLegPositionFromConsole(int servonum){
 
-<<<<<<< Updated upstream
   showServoValuesToConcole();
   
   Serial.println("Eingabe Neuer Wert für Servo 0(Oberschenkel): ");   setServoPositionFromConsole(0);
@@ -200,9 +196,7 @@ void walkforeward() {
 
 
     
-=======
 
->>>>>>> Stashed changes
 }
 
 ///////////////////////////////////////////
