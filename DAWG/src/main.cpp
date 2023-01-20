@@ -45,6 +45,7 @@ void setup() {
   pwm.setOscillatorFrequency(27000000);
   //set PWM to 50 Hz
   pwm.setPWMFreq(SERVO_FREQ);
+<<<<<<< Updated upstream
   //DO NOT CHANGE
   ///////////////////////////////////////////
 
@@ -59,6 +60,12 @@ void setup() {
 
   #if VINCENT
   #endif
+=======
+  
+  pwm.setPWM(0,0,150);
+  pwm.setPWM(1,0,150);
+
+>>>>>>> Stashed changes
   delay(10);
 }
 
@@ -125,6 +132,7 @@ void setServoPositionFromConsole(int servonum){
 //anstatt servonum muss als parameter noch der fuß übernommen werden
 void setLegPositionFromConsole(int servonum){
 
+<<<<<<< Updated upstream
   showServoValuesToConcole();
   
   Serial.println("Eingabe Neuer Wert für Servo 0(Oberschenkel): ");   setServoPositionFromConsole(0);
@@ -192,6 +200,9 @@ void walkforeward() {
 
 
     
+=======
+
+>>>>>>> Stashed changes
 }
 
 ///////////////////////////////////////////
@@ -210,3 +221,19 @@ void setServoPulse(uint8_t n, double pulse) {
   Serial.println(pulse);
   pwm.setPWM(n, 0, pulse);
 }
+<<<<<<< Updated upstream
+=======
+
+void loop() {
+
+  Serial.println(servonum);
+  for (int pulselen = SERVOMIN; pulselen < SERVOMAX; pulselen++) {
+    pwm.setPWM(0, 0, pulselen);
+    pwm.setPWM(1, 0, pulselen);
+    delay(10);
+  }
+
+ 
+}
+
+>>>>>>> Stashed changes
