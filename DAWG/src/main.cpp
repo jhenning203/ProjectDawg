@@ -193,10 +193,6 @@ void walkforeward() {
     pwm.setPWM(1, 0, 379);
 
     delay(1000);
-
-
-    
-
 }
 
 //one step sequence needs optimisation
