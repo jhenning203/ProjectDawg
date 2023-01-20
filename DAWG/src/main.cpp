@@ -37,7 +37,7 @@ void takeastep (int leg);
 void sitdown();
 void standup();
 void punch();
-void standardpos();
+void standardpos(int leg);
 
 void setup() {
   ////////////////////////////////////////////////////
@@ -62,7 +62,12 @@ void setup() {
   #endif
 
   #if VINCENT
-  
+  standardpos(1);
+  standardpos(2);
+  standardpos(3);
+  standardpos(4);
+ 
+
 
   #endif
   delay(10);
@@ -79,7 +84,7 @@ void loop() {
   /////////////////////////////
   //@VINCENT DEIN CODE HIER REIN
   #if VINCENT 
-  //pwm.setPWM(0,0,500);
+
   #endif
   //VINCENT CODE ENDE
   /////////////////////////////
@@ -103,9 +108,9 @@ void standardpos(int leg){
   default:
     break;
   }
-  pwm.setPWM(0,0,425);
-  pwm.setPWM(1,0,425);
-  pwm.setPWM(2,0,300);
+  pwm.setPWM(servobyleg, 0, 425);
+  pwm.setPWM(servobyleg + 1,0,425);
+  pwm.setPWM(servobyleg + 2,0,300);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -238,11 +243,11 @@ void takeastep(int leg){
   default:
     break;
   }
-  int Servo0 = 430;
+  int Servo0 = 425;
   int Servo1 = 425;
   pwm.setPWM(servobyleg, 0, Servo0);
   pwm.setPWM(servobyleg + 1, 0, Servo1);
-  delay(1000);
+  delay(150);
   for(int pulslen = Servo1; pulslen > 190; pulslen -- ){
       pwm.setPWM(servobyleg + 1, 0, pulslen);
       delay(1);
@@ -251,18 +256,18 @@ void takeastep(int leg){
     pwm.setPWM(servobyleg, 0, pulslen);
     delay(1);
   }
-delay (100);
+delay (50);
 
 
   for(int pulslen = 190; pulslen < 315 ;pulslen ++ ){
     pwm.setPWM(servobyleg + 1, 0, pulslen);
     delay(1);
   }
-  delay(1000);
+  delay(100);
   for(int pulslen = 320; pulslen < 430; pulslen ++ ){
     pwm.setPWM(servobyleg, 0, pulslen);
     pwm.setPWM(servobyleg + 1, 0, (pulslen - 5));
-    delay(3);
+    delay(2);
   }
 }
 
@@ -276,21 +281,18 @@ int Servo0 = 430;
     pwm.setPWM(4, 0, pulslen);
     pwm.setPWM(8, 0, pulslen);
     pwm.setPWM(12, 0, pulslen);
-    delay(2);
   }
   for(int pulslen = Servo1; pulslen > 330; pulslen -- ){
     pwm.setPWM(1, 0, pulslen);
     pwm.setPWM(5, 0, pulslen);
     pwm.setPWM(9, 0, pulslen);
     pwm.setPWM(13, 0, pulslen);
-    delay(2);
   }
   for(int pulslen = 480; pulslen < 495; pulslen ++ ){
     pwm.setPWM(0, 0, pulslen);
     pwm.setPWM(4, 0, pulslen);
     pwm.setPWM(8, 0, pulslen);
     pwm.setPWM(12, 0, pulslen);
-    delay(2);
   }
 }
 
@@ -300,27 +302,35 @@ void standup(){
   int Servo1 = 330;
   pwm.setPWM(0, 0, Servo0);
   pwm.setPWM(1, 0, Servo1);
-  pwm.setPWM(2, 0, Servo0);
+
   pwm.setPWM(4, 0, Servo0);
-  pwm.setPWM(6, 0, Servo0);
-  pwm.setPWM(9, 0, Servo0);
-  pwm.setPWM(10, 0, Servo0);
+  pwm.setPWM(5, 0, Servo1);
+
+  pwm.setPWM(8, 0, Servo0);
+  pwm.setPWM(9, 0, Servo1);
+
   pwm.setPWM(12, 0, Servo0);
-  pwm.setPWM(13, 0, Servo0);
+  pwm.setPWM(13, 0, Servo1);
   for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
     pwm.setPWM(1, 0, pulslen);
-    delay(4);
+    pwm.setPWM(5, 0, pulslen);
+    pwm.setPWM(9, 0, pulslen);
+    pwm.setPWM(13, 0, pulslen);
+    //delay(4);
   }
-  for(int pulslen = Servo0; pulslen > 430; pulslen -- ){
+  for(int pulslen = Servo0; pulslen > 425; pulslen -- ){
     pwm.setPWM(0, 0, pulslen);
-    delay(4);
+    pwm.setPWM(4, 0, pulslen);
+    pwm.setPWM(8, 0, pulslen);
+    pwm.setPWM(12, 0, pulslen);
+    //delay(4);
   }
 }
 
 // Punch left front 
 void punch(){
   //check if in default position and goto default 
-  int Servo0 = 430;
+  int Servo0 = 425;
   int Servo1 = 425;
   pwm.setPWM(0, 0, Servo0);
   pwm.setPWM(1, 0, Servo1);
