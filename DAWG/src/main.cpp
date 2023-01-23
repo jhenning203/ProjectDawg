@@ -38,6 +38,7 @@ void sitdown();
 void standup();
 void punch();
 void standardpos(int leg);
+void walkingexperiment();
 
 void setup() {
   ////////////////////////////////////////////////////
@@ -62,15 +63,14 @@ void setup() {
   #endif
 
   #if VINCENT
-  standardpos(1);
-  standardpos(2);
-  standardpos(3);
-  standardpos(4);
-  
-  
- 
+ standardpos(1);
+ standardpos(2);
+ standardpos(3);
+ standardpos(4);
+ delay(4000);
  
 
+ 
 
   #endif
   delay(10);
@@ -87,7 +87,9 @@ void loop() {
   /////////////////////////////
   //@VINCENT DEIN CODE HIER REIN
   #if VINCENT 
+  //walkingexperiment();
 
+  
   #endif
   //VINCENT CODE ENDE
   /////////////////////////////
@@ -112,11 +114,22 @@ void standardpos(int leg){
   default:
     break;
   }
-  if(leg == 1 || leg == 3){
+  if(leg == 1){
     pwm.setPWM(servobyleg, 0, 425);
     pwm.setPWM(servobyleg + 1,0,425);
+    pwm.setPWM(servobyleg + 2,0,290);
+  }
+  if(leg == 3){
+    pwm.setPWM(servobyleg, 0, 415);
+    pwm.setPWM(servobyleg + 1,0,425);
     pwm.setPWM(servobyleg + 2,0,300);
-  }else{
+  }
+  if(leg == 2){
+    pwm.setPWM(servobyleg, 0, 255);
+    pwm.setPWM(servobyleg + 1,0,240);
+    pwm.setPWM(servobyleg + 2,0,315);
+  }
+  if(leg == 4){
     pwm.setPWM(servobyleg, 0, 225);
     pwm.setPWM(servobyleg + 1,0,225);
     pwm.setPWM(servobyleg + 2,0,300);
@@ -270,7 +283,7 @@ void takeastep(int leg){
   }
 delay (50);
 
-
+/*
   for(int pulslen = 190; pulslen < 315 ;pulslen ++ ){
     pwm.setPWM(servobyleg + 1, 0, pulslen);
     delay(1);
@@ -306,8 +319,9 @@ delay (50);
       pwm.setPWM(servobyleg + 1, 0, pulslen);
       delay(2);
   }
-
+*/
   }
+  
 }
 
 //Sitting down from default standing position 
@@ -386,62 +400,79 @@ void standup(){
 
 //Just an experimental funktion how to implement walking with all 4 legs at once
 void walkingexperiment(){
-  int servo0 = 425;
+  int Servoleft0 = 425;
+  int Servoright0 = 225;
   // all servos to default maybe not needed 
   standardpos(1);
   standardpos(2);
   standardpos(3);
   standardpos(4);
   //lifting foot off the ground 
-  for(int pulslen = servo0; pulslen > 190 ; pulslen -- ){
-    pwm.setPWM(1 , 0, pulslen);
-    pwm.setPWM(13, 0, pulslen);
+  int pulslenright = Servoright0;
+  for(int pulslenleft = Servoleft0; pulslenleft > 190 ; pulslenleft -- ){
+    pwm.setPWM(1 , 0, pulslenleft);
+    pwm.setPWM(13, 0, pulslenright);
+    pulslenright++;
     delay(1);
   }
   //extending leg forward 
-  for(int pulslen = servo0; pulslen > 320; pulslen -- ){
-    pwm.setPWM(0 ,0 ,pulslen);
-    pwm.setPWM(12 ,0 ,pulslen);
+  pulslenright = Servoright0;
+  for(int pulslenleft = Servoleft0; pulslenleft > 320; pulslenleft -- ){
+    pwm.setPWM(0 ,0 ,pulslenleft);
+    pwm.setPWM(12 ,0 ,pulslenright);
+    pulslenright++;
     delay(1);
   }
   delay(20);
   // setting foot on the ground 
-  for(int pulslen = 190; pulslen < 320; pulslen ++ ){
-    pwm.setPWM(1, 0, pulslen);
-    pwm.setPWM(13, 0, pulslen);
+  pulslenright = 460;
+  for(int pulslenleft = 190; pulslenleft < 320; pulslenleft ++ ){
+    pwm.setPWM(1, 0, pulslenleft);
+    pwm.setPWM(13, 0, pulslenright);
+    pulslenright--;
     delay(1);
   }
   //moving both servos to get back into starting position
-  for(int pulslen = 320; pulslen < servo0; pulslen ++){
-  pwm.setPWM(0, 0, pulslen);
-  pwm.setPWM(12, 0, pulslen);
-  pwm.setPWM(1, 0, pulslen);
-  pwm.setPWM(13, 0, pulslen);
+  pulslenright = 335;
+  for(int pulslenleft = 320; pulslenleft < Servoleft0; pulslenleft ++){
+  pwm.setPWM(0, 0, pulslenleft);
+  pwm.setPWM(1, 0, pulslenleft);
+  pwm.setPWM(12, 0, pulslenright);
+  pwm.setPWM(13, 0, pulslenright);
+  pulslenright--;
   }
   // Diagonale links vorne und rechts hinten abgeshlossen
   /////////////////////////////////////
   // Diagonale rechts vorne und links hinten 
-  for(int pulslen = servo0; pulslen > 190 ; pulslen -- ){
-    pwm.setPWM(5 , 0, pulslen);
-    pwm.setPWM(9, 0, pulslen);
+  pulslenright = Servoright0;
+  for(int pulslenleft = Servoleft0; pulslenleft > 190 ; pulslenleft -- ){
+    pwm.setPWM(5 , 0, pulslenright);
+    pwm.setPWM(9, 0, pulslenleft);
+    pulslenright++;
     delay(1);
   }
-  for(int pulslen = servo0; pulslen > 320; pulslen -- ){
-    pwm.setPWM(4 ,0 ,pulslen);
-    pwm.setPWM(8 ,0 ,pulslen);
+  pulslenright = Servoright0;
+  for(int pulslenleft = Servoleft0; pulslenleft > 320; pulslenleft -- ){
+    pwm.setPWM(4 ,0 ,pulslenright);
+    pwm.setPWM(8 ,0 ,pulslenleft);
+    pulslenright++;
     delay(1);
   }
   delay(20);
-  for(int pulslen = 190; pulslen < 320; pulslen ++ ){
-    pwm.setPWM(5, 0, pulslen);
-    pwm.setPWM(9, 0, pulslen);
+  pulslenright = 460;
+  for(int pulslenleft = 190; pulslenleft < 320; pulslenleft ++ ){
+    pwm.setPWM(5, 0, pulslenright);
+    pwm.setPWM(9, 0, pulslenleft);
+    pulslenright--;
     delay(1);
   }
-  for(int pulslen = 320; pulslen < 425; pulslen ++){
-  pwm.setPWM(4, 0, pulslen);
-  pwm.setPWM(8, 0, pulslen);
-  pwm.setPWM(5, 0, pulslen);
-  pwm.setPWM(9, 0, pulslen);
+  pulslenright = 335;
+  for(int pulslenleft = 320; pulslenleft < 425; pulslenleft ++){
+  pwm.setPWM(4, 0, pulslenright);
+  pwm.setPWM(8, 0, pulslenleft);
+  pwm.setPWM(5, 0, pulslenright);
+  pwm.setPWM(9, 0, pulslenleft);
+  pulslenright--;
   }
   // Diagonale rechts vorne und links hinten abgeschlossen
   
