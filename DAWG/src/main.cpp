@@ -10,8 +10,8 @@ uint8_t servonum = 0;
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
 #define DAWID     0
-#define VINCENT   1
-#define JANNIS    0
+#define VINCENT   0
+#define JANNIS    1
 ////////////////////////////////////////////////////////////////////////////////
 
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
@@ -52,21 +52,23 @@ void setup() {
   //DO NOT CHANGE
   ///////////////////////////////////////////
 
+  pwm.setPWM(0,0,300);
+
   #if DAWID
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
     MenuSetup();
   #endif
 
   #if JANNIS
-
-  #endif
-
-  #if VINCENT
   standardpos(1);
   standardpos(2);
   standardpos(3);
   standardpos(4);
- 
+  #endif
+
+  #if VINCENT
+  
+
 
 
   #endif
@@ -78,7 +80,15 @@ void loop() {
   
   //@JANNIS DEIN CODE HIER REIN
   #if JANNIS 
-  walkforeward();
+  //walkforeward();
+  /*takeastep(1);
+  takeastep(4)
+  delay(1000);
+
+  takeastep(2);
+  takeastep(3);
+  delay(1000);*/
+
   #endif
   //JANNIS CODE ENDE
   /////////////////////////////
