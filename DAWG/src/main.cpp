@@ -11,7 +11,7 @@ uint8_t servonum = 0;
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
 #define DAWID     0
 #define VINCENT   0
-#define JANNIS    1
+#define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
 #define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
@@ -52,23 +52,21 @@ void setup() {
   //DO NOT CHANGE
   ///////////////////////////////////////////
 
-  pwm.setPWM(0,0,300);
-
   #if DAWID
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
     MenuSetup();
   #endif
 
   #if JANNIS
+
+  #endif
+
+  #if VINCENT
   standardpos(1);
   standardpos(2);
   standardpos(3);
   standardpos(4);
-  #endif
-
-  #if VINCENT
-  
-
+ 
 
 
   #endif
@@ -80,15 +78,7 @@ void loop() {
   
   //@JANNIS DEIN CODE HIER REIN
   #if JANNIS 
-  //walkforeward();
-  /*takeastep(1);
-  takeastep(4)
-  delay(1000);
-
-  takeastep(2);
-  takeastep(3);
-  delay(1000);*/
-
+  walkforeward();
   #endif
   //JANNIS CODE ENDE
   /////////////////////////////
@@ -106,6 +96,7 @@ void loop() {
   ////////////////////////////
 }
 /////////////////////////////////////////////////////////
+
 // Function for Leg calibration
 void standardpos(int leg){
   int servobyleg = 0;
@@ -310,6 +301,8 @@ int Servo0 = 430;
 void standup(){
   int Servo0 = 495;
   int Servo1 = 330;
+  // setting all servos into down position 
+  // maybe include setting 3 servo for hip rotation into default position
   pwm.setPWM(0, 0, Servo0);
   pwm.setPWM(1, 0, Servo1);
 
@@ -321,6 +314,7 @@ void standup(){
 
   pwm.setPWM(12, 0, Servo0);
   pwm.setPWM(13, 0, Servo1);
+  // setting all legs into standing position 
   for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
     pwm.setPWM(1, 0, pulslen);
     pwm.setPWM(5, 0, pulslen);
@@ -335,6 +329,69 @@ void standup(){
     pwm.setPWM(12, 0, pulslen);
     //delay(4);
   }
+}
+
+//Just an experimental funktion how to implement walking with all 4 legs at once
+void walkingexperiment(){
+  int servo0 = 425;
+  // all servos to default maybe not needed 
+  standardpos(1);
+  standardpos(2);
+  standardpos(3);
+  standardpos(4);
+  //lifting foot off the ground 
+  for(int pulslen = servo0; pulslen > 190 ; pulslen -- ){
+    pwm.setPWM(1 , 0, pulslen);
+    pwm.setPWM(13, 0, pulslen);
+    delay(1);
+  }
+  //extending leg forward 
+  for(int pulslen = servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(0 ,0 ,pulslen);
+    pwm.setPWM(12 ,0 ,pulslen);
+    delay(1);
+  }
+  delay(20);
+  // setting foot on the ground 
+  for(int pulslen = 190; pulslen < 320; pulslen ++ ){
+    pwm.setPWM(1, 0, pulslen);
+    pwm.setPWM(13, 0, pulslen);
+    delay(1);
+  }
+  //moving both servos to get back into starting position
+  for(int pulslen = 320; pulslen < servo0; pulslen ++){
+  pwm.setPWM(0, 0, pulslen);
+  pwm.setPWM(12, 0, pulslen);
+  pwm.setPWM(1, 0, pulslen);
+  pwm.setPWM(13, 0, pulsen);
+  }
+  // Diagonale links vorne und rechts hinten abgeshlossen
+  /////////////////////////////////////
+  // Diagonale rechts vorne und links hinten 
+  for(int pulslen = servo0; pulslen > 190 ; pulslen -- ){
+    pwm.setPWM(5 , 0, pulslen);
+    pwm.setPWM(9, 0, pulslen);
+    delay(1);
+  }
+  for(int pulslen = servo0; pulslen > 320; pulslen -- ){
+    pwm.setPWM(4 ,0 ,pulslen);
+    pwm.setPWM(8 ,0 ,pulslen);
+    delay(1);
+  }
+  delay(20);
+  for(int pulslen = 190; pulslen < 320; pulslen ++ ){
+    pwm.setPWM(5, 0, pulslen);
+    pwm.setPWM(9, 0, pulslen);
+    delay(1);
+  }
+  for(int pulslen = 320; pulslen < 425; pulslen ++){
+  pwm.setPWM(4, 0, pulslen);
+  pwm.setPWM(8, 0, pulslen);
+  pwm.setPWM(5, 0, pulslen);
+  pwm.setPWM(9, 0, pulsen);
+  }
+  // Diagonale rechts vorne und links hinten abgeschlossen
+  
 }
 
 // Punch left front 
