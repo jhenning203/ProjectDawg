@@ -62,15 +62,12 @@ void setup() {
   #endif
 
   #if VINCENT
-  standardpos(4);
+  standardpos(1);
   standardpos(2);
-
-  pwm.setPWM(12,0,170);
-  delay(100);
-  pwm.setPWM(13,0,320);
-  delay(100);
-  pwm.setPWM(12,0,155);
- 
+  standardpos(3);
+  standardpos(4);
+  
+  
  
  
 
@@ -319,57 +316,70 @@ void sitdown(){
   int Servoleft0 = 425;
   int Servoleft1 = 425;
   int Servoright0 = 225;
-  int Servoright = 225;
+  int Servoright1 = 225;
+  int pulslenright = Servoright0;
   for(int pulslen = Servoleft0; pulslen < 480; pulslen ++ ){
     pwm.setPWM(0, 0, pulslen);
-    pwm.setPWM(4, 0, pulslen);
     pwm.setPWM(8, 0, pulslen);
-    pwm.setPWM(12, 0, pulslen);
+    pwm.setPWM(4, 0, pulslenright);
+    pwm.setPWM(12, 0, pulslenright);
+    pulslenright = pulslenright - 1;
   }
+  pulslenright = Servoright1;
   for(int pulslen = Servoleft1; pulslen > 330; pulslen -- ){
     pwm.setPWM(1, 0, pulslen);
-    pwm.setPWM(5, 0, pulslen);
     pwm.setPWM(9, 0, pulslen);
-    pwm.setPWM(13, 0, pulslen);
+    pwm.setPWM(5, 0, pulslenright);
+    pwm.setPWM(13, 0, pulslenright);
+    pulslenright = pulslenright + 1;
   }
+  pulslenright = 170;
   for(int pulslen = 480; pulslen < 495; pulslen ++ ){
     pwm.setPWM(0, 0, pulslen);
-    pwm.setPWM(4, 0, pulslen);
     pwm.setPWM(8, 0, pulslen);
-    pwm.setPWM(12, 0, pulslen);
+    pwm.setPWM(4, 0, pulslenright);
+    pwm.setPWM(12, 0, pulslenright);
+    pulslenright = pulslenright - 1;
   }
 }
 
 //Standup sequence only if DAWG is all the way down 
 void standup(){
-  int Servo0 = 495;
-  int Servo1 = 330;
+  int Servoleft0 = 495;
+  int Servoleft1 = 330;
+  int Servoright0 = 155;
+  int Servoright1 = 320;
+
   // setting all servos into down position 
   // maybe include setting 3 servo for hip rotation into default position
-  pwm.setPWM(0, 0, Servo0);
-  pwm.setPWM(1, 0, Servo1);
+  pwm.setPWM(0, 0, Servoleft0);
+  pwm.setPWM(1, 0, Servoleft1);
 
-  pwm.setPWM(4, 0, Servo0);
-  pwm.setPWM(5, 0, Servo1);
+  pwm.setPWM(4, 0, Servoright0);
+  pwm.setPWM(5, 0, Servoright1);
 
-  pwm.setPWM(8, 0, Servo0);
-  pwm.setPWM(9, 0, Servo1);
+  pwm.setPWM(8, 0, Servoleft0);
+  pwm.setPWM(9, 0, Servoleft1);
 
-  pwm.setPWM(12, 0, Servo0);
-  pwm.setPWM(13, 0, Servo1);
+  pwm.setPWM(12, 0, Servoright0);
+  pwm.setPWM(13, 0, Servoright1);
   // setting all legs into standing position 
-  for( int pulslen = Servo1; pulslen < 425; pulslen ++ ){
+  int pulslenright = Servoright1;
+  for( int pulslen = Servoleft1; pulslen < 425; pulslen ++ ){
     pwm.setPWM(1, 0, pulslen);
-    pwm.setPWM(5, 0, pulslen);
     pwm.setPWM(9, 0, pulslen);
-    pwm.setPWM(13, 0, pulslen);
+    pwm.setPWM(5, 0, pulslenright);
+    pwm.setPWM(13, 0, pulslenright);
+    pulslenright = pulslenright - 1;
     //delay(4);
   }
-  for(int pulslen = Servo0; pulslen > 425; pulslen -- ){
+  pulslenright = Servoright0;
+  for(int pulslen = Servoleft0; pulslen > 425; pulslen -- ){
     pwm.setPWM(0, 0, pulslen);
-    pwm.setPWM(4, 0, pulslen);
     pwm.setPWM(8, 0, pulslen);
-    pwm.setPWM(12, 0, pulslen);
+    pwm.setPWM(4, 0, pulslenright);
+    pwm.setPWM(12, 0, pulslenright);
+    pulslenright = pulslenright + 1;
     //delay(4);
   }
 }
