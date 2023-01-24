@@ -34,5 +34,7 @@ int* getLegAngles(int* legC){
     int theta_s = acos((h^2 + SHOULDER_LEGTH^2 - WRIST_LENGTH^2)/(2*h * SHOULDER_LEGTH)) - phi;
     int theta_w = acos((WRIST_LENGTH^2 + SHOULDER_LEGTH^2 - h^2)/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
 
-    
+    //int returnArray[3] = {theta_h, theta_s, theta_w};
+    //return returnArray;
+    return {theta_h, theta_s, theta_w};
 }
