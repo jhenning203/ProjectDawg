@@ -9,8 +9,8 @@ uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
-#define DAWID     0
-#define VINCENT   01
+#define DAWID     01
+#define VINCENT   0
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +25,12 @@ uint8_t servonum = 0;
 #define Tiefs2 495
 #define VorneS1 315
 #define Vorne 320
+
+#define S0_L_UNTEN        495
+#define S1_L_UNTEN        330
+
+//#define S0_R_UNTEN        
+#define S2_MITTELSTELLUNG 290
 
 void MenuSetup();
 void showServoValuesToConcole();
@@ -75,6 +81,7 @@ void setup() {
  standardpos(3);
  standardpos(4);
  delay(5000);
+ sitdown();
 
  //sitdown();
  //delay(5000);
@@ -106,7 +113,7 @@ void loop() {
   /////////////////////////////
   //DAWID CODE
   #if DAWID 
-    //setLegPositionFromConsole(0);
+    setLegPositionFromConsole(0);
   #endif
   //DAWID CODE ENDE
   ////////////////////////////
@@ -167,8 +174,14 @@ void confirmPos(){
   int servoNumCounter = 0;
   for(int i = 0; i < 4; i++){
     for(int y = 0; y < 3; y++){
+      //übertragen der Werte aus dem ServPosArray auf den PCA
       pwm.setPWM(servoNumCounter,0,ServoPosArray[i][y]);
+      //laufvariable, die den aktuellen Port auf dem PCA9685 vorgibt
       servoNumCounter++;
+      //überspringt nicht genutzte Pins auf PCA9685
+      if(servoNumCounter == 3){servoNumCounter = 4;}
+      if(servoNumCounter == 7){servoNumCounter = 8;}
+      if(servoNumCounter == 11){servoNumCounter = 12;}
     }
   }
 }
