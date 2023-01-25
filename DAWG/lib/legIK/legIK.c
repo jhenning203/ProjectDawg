@@ -7,9 +7,9 @@ int legPos[3] = {0, 0,  0};
 
 //funktion zum berechnen der benötigten Winkel für IK
 
-//legC[0]:  x
-//legC[1]:  y
-//legC[2]:  z
+//legC[0]:  x;  theta_h Rotation Hüfte
+//legC[1]:  y;  theta_s rotation oberschenkel
+//legC[2]:  z;  theta_w Rotation Unterschenkel
 int* getLegAngles(int* legC){
     //für berechnung siehe
     //https://www.adhamelarabawy.com/pdf/IK_Model.pdf
@@ -36,5 +36,17 @@ int* getLegAngles(int* legC){
 
     //int returnArray[3] = {theta_h, theta_s, theta_w};
     //return returnArray;
+    //rückgabe der benötigten 3 winkel in °
     return {theta_h, theta_s, theta_w};
+}
+
+//Transformation von 3 Winekln in ° in PWM Servo-Werte
+int* transformLegAnglesToServoVals(int* legA){
+    int dummy = 0;
+    //anstelle von dummy muss Konstante zum umrechnen von Winkeln in pwm-schritte eingefügt werden
+    int pwm_servo2 = legA[0] * dummy;
+    int pwm_servo0 = legA[1] * dummy;
+    int pwm_servo1 = legA[2] * dummy;
+
+    return {pwm_servo0, pwm_servo1, pwm_servo2};
 }

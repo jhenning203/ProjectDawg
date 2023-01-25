@@ -11,3 +11,5 @@ int legPos[3] = {0, 0,  0};
 
 //funktion zum berechnen der benötigten Winkel für IK
 int* getLegAngles(int* legC);
+//Transformation der Winkel aus getLegAngles in nutzbare PWM-Werte von 150-600
+int* transformLegAnglesToServoVals(int* legA);
