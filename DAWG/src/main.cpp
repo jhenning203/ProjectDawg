@@ -126,7 +126,7 @@ void standardpos(int leg){
   }
   if(leg == 2){
     pwm.setPWM(servobyleg, 0, 255);
-    pwm.setPWM(servobyleg + 1,0,240);
+    pwm.setPWM(servobyleg + 1,0,225);
     pwm.setPWM(servobyleg + 2,0,315);
   }
   if(leg == 4){
@@ -283,7 +283,7 @@ void takeastep(int leg){
   }
 delay (50);
 
-/*
+
   for(int pulslen = 190; pulslen < 315 ;pulslen ++ ){
     pwm.setPWM(servobyleg + 1, 0, pulslen);
     delay(1);
@@ -319,7 +319,7 @@ delay (50);
       pwm.setPWM(servobyleg + 1, 0, pulslen);
       delay(2);
   }
-*/
+
   }
   
 }
@@ -400,6 +400,15 @@ void standup(){
 
 //Just an experimental funktion how to implement walking with all 4 legs at once
 void walkingexperiment(){
+  //second attempt 
+  /*
+Links:   Standard, ausgestreckt, zurückgestellt | Rechts: Standard, ausgestreckt, zurückgestellt
+Servo 0:  425        320 (--)         ???(440?) | Servo 0:  225       170           ???(240?)
+Servo 1:  425        190 (--)         ???(425?) | Servo 1:  225       320           ???(225?)
+  */
+ 
+  //First failed attempt, moving feet diagonal to each other 
+  /*
   int Servoleft0 = 425;
   int Servoright0 = 225;
   // all servos to default maybe not needed 
@@ -475,7 +484,7 @@ void walkingexperiment(){
   pulslenright--;
   }
   // Diagonale rechts vorne und links hinten abgeschlossen
-  
+  */
 }
 
 // Punch left front 
