@@ -9,8 +9,8 @@ uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
-#define DAWID     0
-#define VINCENT   01
+#define DAWID     01
+#define VINCENT   0
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -26,11 +26,18 @@ uint8_t servonum = 0;
 #define VorneS1 315
 #define Vorne 320
 
+#define S0_L_UNTEN        495
+#define S1_L_UNTEN        330
+
+//#define S0_R_UNTEN        
+#define S2_MITTELSTELLUNG 290
+
 void MenuSetup();
 void showServoValuesToConcole();
 void setServoPositionFromConsole(int servonum);
 void setLegPositionFromConsole(int servonum);
 void setLegPosition(int leg, int servo0, int servo1, int servo2);
+void standupDaw();
 
 void walkforeward();
 void takeastep (int leg);
@@ -55,7 +62,13 @@ void setup() {
 
   #if DAWID
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
+    setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
+    setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
+    setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
     MenuSetup();
+    //pwm.setPWM(0, 0, 425);
+    //pwm.setPWM(1,0,425);
+    //pwm.setPWM(2,0,290);
   #endif
 
   #if JANNIS
@@ -67,7 +80,12 @@ void setup() {
  standardpos(2);
  standardpos(3);
  standardpos(4);
- delay(4000);
+ delay(5000);
+ sitdown();
+
+ //sitdown();
+ //delay(5000);
+ //standup();
  
 
  
@@ -156,8 +174,14 @@ void confirmPos(){
   int servoNumCounter = 0;
   for(int i = 0; i < 4; i++){
     for(int y = 0; y < 3; y++){
+      //übertragen der Werte aus dem ServPosArray auf den PCA
       pwm.setPWM(servoNumCounter,0,ServoPosArray[i][y]);
+      //laufvariable, die den aktuellen Port auf dem PCA9685 vorgibt
       servoNumCounter++;
+      //überspringt nicht genutzte Pins auf PCA9685
+      if(servoNumCounter == 3){servoNumCounter = 4;}
+      if(servoNumCounter == 7){servoNumCounter = 8;}
+      if(servoNumCounter == 11){servoNumCounter = 12;}
     }
   }
 }
@@ -224,11 +248,55 @@ void setLegPosition(int leg, int servo0, int servo1, int servo2){
     break;
   }
 
-  //3. servo noch nicht drin, zunächst nicht wichtig
   pwm.setPWM(servobyleg,0,servo0);
   pwm.setPWM(servobyleg+1,0,servo1);
+  pwm.setPWM(servobyleg+2,0,servo2);
 }
 
+void standupDaw(){
+  int Servoleft0 = 495;
+  int Servoleft1 = 330;
+  int Servoright0 = 155;
+  int Servoright1 = 320;
+
+  // setting all servos into down position 
+  // maybe include setting 3 servo for hip rotation into default position
+  pwm.setPWM(0, 0, Servoleft0);
+  pwm.setPWM(1, 0, Servoleft1);
+
+  pwm.setPWM(4, 0, Servoright0);
+  pwm.setPWM(5, 0, Servoright1);
+
+  pwm.setPWM(8, 0, Servoleft0);
+  pwm.setPWM(9, 0, Servoleft1);
+
+  pwm.setPWM(12, 0, Servoright0);
+  pwm.setPWM(13, 0, Servoright1);
+
+  // setting all legs into standing position 
+  int pulslenright = Servoright1;
+  for( int pulslen = Servoleft1; pulslen < 425; pulslen ++ ){
+    //VL 
+    pwm.setPWM(1, 0, pulslen);
+    //VR
+    pwm.setPWM(5, 0, pulslenright);
+    //HL
+    pwm.setPWM(9, 0, pulslen);
+    //HR
+    pwm.setPWM(13, 0, pulslenright);
+    pulslenright = pulslenright - 1;
+    //delay(4);
+  }
+  pulslenright = Servoright0;
+  for(int pulslen = Servoleft0; pulslen > 425; pulslen -- ){
+    pwm.setPWM(0, 0, pulslen);
+    pwm.setPWM(8, 0, pulslen);
+    pwm.setPWM(4, 0, pulslenright);
+    pwm.setPWM(12, 0, pulslenright);
+    pulslenright = pulslenright + 1;
+    //delay(4);
+  }
+}
 //Funtions written by Dawid END
 ////////////////////////////////////////////////////////////////
 
