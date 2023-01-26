@@ -19,6 +19,14 @@ int ServoPosArrayforward[4][3] =
     260,    300,    300    
 };
 
+int ServoPosArrayback[4][3] = 
+{ 
+    445,    500,    290,
+    215,    110,    315,
+    430,    510,    300,  
+    205,    110,    300    
+};
+
 
 //standard values for reference
 /*

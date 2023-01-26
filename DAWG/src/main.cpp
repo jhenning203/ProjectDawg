@@ -46,6 +46,7 @@ void standup();
 void punch();
 void standardpos(int leg);
 void walkingexperiment();
+void step(int leg);
 
 void setup() {
   ////////////////////////////////////////////////////
@@ -78,8 +79,6 @@ void setup() {
   #if VINCENT
  
 
- 
-
   #endif
   delay(10);
 }
@@ -95,7 +94,12 @@ void loop() {
   /////////////////////////////
   //@VINCENT DEIN CODE HIER REIN
   #if VINCENT 
-  //walkingexperiment();
+  /*
+ step(1);
+ delay(2000);
+setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
+delay(2000);
+ */
 
   
   #endif
@@ -302,6 +306,54 @@ void walkforeward() {
     delay(1000);
 }
 
+void step(int leg){
+
+
+
+  //lift foot of the ground 
+  for(int legpos = ServoPosArray[0][1]; legpos >= 190; legpos --){
+    pwm.setPWM(1,0,legpos);
+    delay(2);
+  }
+  //move whole leg forward 
+for(int legpos = ServoPosArray[0][0]; legpos >= ServoPosArrayforward[0][0]; legpos --){
+  pwm.setPWM(0,0,legpos);
+  delay(2);
+}
+//place foot on the ground 
+for(int legpos = 190; legpos <= ServoPosArrayforward[0][1]; legpos ++){
+  pwm.setPWM(1,0,legpos);
+  delay(2);
+}
+////////////////////////////////////
+delay(20);
+// forward movement of leg completed 
+
+
+if(fabs(ServoPosArrayforward[0][0] - ServoPosArray[0][0]) > fabs(ServoPosArrayforward[0][1] - ServoPosArray[0][1])){
+  int legpos2 = ServoPosArrayforward[0][1];
+  for(int legpos = ServoPosArrayforward[0][0]; legpos <= ServoPosArray[0][0]; legpos++){
+    pwm.setPWM(0,0,legpos);
+    if(legpos2 <= ServoPosArray[0][1]){
+      pwm.setPWM(1,0,legpos2);
+    }
+    legpos2++;
+    delay(5);
+  }
+}else{
+  int legpos2 = ServoPosArrayforward[0][0];
+  for(int legpos = ServoPosArrayforward[0][1]; legpos <= ServoPosArray[0][1]; legpos++){
+    pwm.setPWM(1,0,legpos);
+    if(legpos2 <= ServoPosArray[0][0]){
+      pwm.setPWM(0,0,legpos2);
+    }
+    legpos2++;
+    delay(5);
+  }
+}
+
+
+}
 //one step sequence needs optimisation
 void takeastep(int leg){
   //leg = 1   links vorn
