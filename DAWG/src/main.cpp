@@ -97,7 +97,8 @@ void loop() {
   /*
  step(1);
  delay(2000);
-setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
+ setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
+ setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
 delay(2000);
  */
 
@@ -328,8 +329,36 @@ for(int legpos = 190; legpos <= ServoPosArrayforward[0][1]; legpos ++){
 ////////////////////////////////////
 delay(20);
 // forward movement of leg completed 
+// Hilfsvariablen für die Bewegung jedes beins erstellen
+int Hilfsvariableleg1_O = ServoPosArrayforward[0][1];
+int Hilfsvariableleg1_U = ServoPosArrayforward[0][0];
+int Hilfsvariableleg4_O = ServoPosArray[3][1];
+int Hilfsvariableleg4_U = ServoPosArray[3][0];
+//For-Schleife läuft durch und jedes bein wird soweit bewegt wie nötig
+for(int laufvariable = 0 ; laufvariable < 150; laufvariable ++){
+  if(Hilfsvariableleg1_O <= ServoPosArray[0][1]){
+    pwm.setPWM(1,0,Hilfsvariableleg1_O);
+  }
+  if(Hilfsvariableleg1_U <= ServoPosArray[0][0]){
+    pwm.setPWM(0,0,Hilfsvariableleg1_U);
+  }
+  if(Hilfsvariableleg4_O >= ServoPosArrayback[3][1]){
+    pwm.setPWM(13,0,Hilfsvariableleg4_O);
+  }
+  if(Hilfsvariableleg4_U >= ServoPosArrayback[3][0]){
+    pwm.setPWM(12,0,Hilfsvariableleg4_U);
+  }
+  Hilfsvariableleg1_O ++;
+  Hilfsvariableleg1_U ++;
+  Hilfsvariableleg4_O --;
+  Hilfsvariableleg4_U -=2;
+  delay(1);
+}
 
 
+/*
+int Hilfsvarablediagonaleunten 
+int Hilfsvarablediagonaleoben
 if(fabs(ServoPosArrayforward[0][0] - ServoPosArray[0][0]) > fabs(ServoPosArrayforward[0][1] - ServoPosArray[0][1])){
   int legpos2 = ServoPosArrayforward[0][1];
   for(int legpos = ServoPosArrayforward[0][0]; legpos <= ServoPosArray[0][0]; legpos++){
@@ -338,6 +367,7 @@ if(fabs(ServoPosArrayforward[0][0] - ServoPosArray[0][0]) > fabs(ServoPosArrayfo
       pwm.setPWM(1,0,legpos2);
     }
     legpos2++;
+
     delay(5);
   }
 }else{
@@ -351,6 +381,7 @@ if(fabs(ServoPosArrayforward[0][0] - ServoPosArray[0][0]) > fabs(ServoPosArrayfo
     delay(5);
   }
 }
+*/
 
 
 }
