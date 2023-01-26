@@ -9,8 +9,8 @@ uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
-#define DAWID     01
-#define VINCENT   0
+#define DAWID     0
+#define VINCENT   01
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -76,16 +76,6 @@ void setup() {
   #endif
 
   #if VINCENT
- standardpos(1);
- standardpos(2);
- standardpos(3);
- standardpos(4);
- delay(5000);
- sitdown();
-
- //sitdown();
- //delay(5000);
- //standup();
  
 
  
@@ -95,7 +85,7 @@ void setup() {
 }
 
 void loop() {
-
+  
   
   //@JANNIS DEIN CODE HIER REIN
   #if JANNIS 
