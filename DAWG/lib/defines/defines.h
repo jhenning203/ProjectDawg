@@ -5,9 +5,9 @@
 //beinhaltte alle Werte der Servos aller Beine
 int ServoPosArray[4][3] = 
 { 
-    425,    425,    290,
+    425,    430,    290,
     235,    225,    315,
-    425,    455,    300,  
+    425,    445,    300,  
     220,    205,    300    
 };
 
