@@ -14,8 +14,6 @@ uint8_t servonum = 0;
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
-#define SERVOMIN  150 // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  600 // This is the 'maximum' pulse length count (out of 4096)
 #define USMIN  600 // This is the rounded 'minimum' microsecond length based on the minimum pulse of 150
 #define USMAX  2400 // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50
@@ -300,6 +298,14 @@ void standupDaw(){
     pwm.setPWM(12, 0, pulslenright);
     pulslenright = pulslenright + 1;
     //delay(4);
+  }
+}
+
+void makeStep(){
+  for(int t = 0; t <= 1; t + 0.1){
+   int servovals[3] =  transformLegAnglesToServoVals(getLegAngles({bezierCurve(0), bezierCurve(1), 0}));
+   setLegPosition(0, servovals[0], servovals[1], servovals[2]);
+   delay(100);
   }
 }
 //Funtions written by Dawid END

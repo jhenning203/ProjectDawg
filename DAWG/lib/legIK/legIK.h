@@ -1,6 +1,8 @@
 ///////////////////////////////////////////////////////
 //first test to write own IK solver 
 
+#include "defines.h"
+
 #define OFF_0               10
 #define OFF_1               15
 #define SHOULDER_LEGTH      107
