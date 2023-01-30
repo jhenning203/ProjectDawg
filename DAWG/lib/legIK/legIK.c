@@ -34,10 +34,15 @@ int* getLegAngles(int* legC){
     int theta_s = acos((h^2 + SHOULDER_LEGTH^2 - WRIST_LENGTH^2)/(2*h * SHOULDER_LEGTH)) - phi;
     int theta_w = acos((WRIST_LENGTH^2 + SHOULDER_LEGTH^2 - h^2)/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
 
-    //int returnArray[3] = {theta_h, theta_s, theta_w};
-    //return returnArray;
-    //rückgabe der benötigten 3 winkel in °
-    return {theta_h, theta_s, theta_w};
+    int a6 = asin(DX/DS);                   //RAD
+    int a7 = radians(180) - (theta_s + a6); //RAD
+    int a8 = theta_s + a8;
+    int a9 = acos(DX/DS);
+
+    int thetaStandardAngle = radians(60);
+    int theta_sa = radians(180) - (a8 + a9);
+    int theta_sa_corr = thetaStandardAngle - theta_sa;
+    return {theta_h, theta_s, theta_sa_corr};
 }
 
 //Transformation von 3 Winekln in ° in PWM Servo-Werte
