@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 #include "defines.h"
+//#include "legIK.h"
+//#include "gait.h"
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
@@ -9,8 +11,8 @@ uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //WENN IHR NUR EUREN CODE TESTEN WOLLT --> HINTER EUREM NAMEN EINE 1 PLATZIEREN
-#define DAWID     0
-#define VINCENT   01
+#define DAWID     01
+#define VINCENT   0
 #define JANNIS    0
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +66,7 @@ void setup() {
     setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
     setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
     setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
-    MenuSetup();
+    //MenuSetup();
     //pwm.setPWM(0, 0, 425);
     //pwm.setPWM(1,0,425);
     //pwm.setPWM(2,0,290);
@@ -301,6 +303,7 @@ void standupDaw(){
   }
 }
 
+/*
 void makeStep(){
   for(int t = 0; t <= 1; t + 0.1){
    int servovals[3] =  transformLegAnglesToServoVals(getLegAngles({bezierCurve(0), bezierCurve(1), 0}));
@@ -308,6 +311,7 @@ void makeStep(){
    delay(100);
   }
 }
+*/
 //Funtions written by Dawid END
 ////////////////////////////////////////////////////////////////
 

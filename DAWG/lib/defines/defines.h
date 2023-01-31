@@ -1,5 +1,6 @@
-#include "legIK.h"
-#include "gait.h"
+#include <stdint.h>
+//#include "utils.h"
+#include <math.h>
 
 #define DEBUGACTIVE 01
 #define SERVOMIN  150   // This is the 'minimum' pulse length count (out of 4096)

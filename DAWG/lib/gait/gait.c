@@ -12,10 +12,13 @@ int bezierCurveN3(int coordinate, int t){
     //P2 (-20|40)
     //P3 (20|40)
     //P4 (20|0)
+    int returnValue = 0;
     if(coordinate == 0){
-        return ((1-t)^3 * p1[0] + 3 * t * (1-t)^2 * p2[0] + 3 * t^2 * (1-t) * p3[0] + t^3 * p4[0]);
+        returnValue = ((1-t)^3 * p1[0]) + (3 * t * (1-t)^2 * p2[0]) + (3 * t^2 * (1-t) * p3[0]) + (t^3 * p4[0]);
+        return returnValue;
     }
     else{
-        return((1-t)^3 * p1[1] + 3 * t * (1-t)^2 * p2[1] + 3 * t^2 * (1-t) * p3[1] + t^3 * p4[1]);
+        returnValue = ((1-t)^3 * p1[1]) + (3 * t * ((1-t)^2) * p2[1]) + (3 * t^2 * (1-t) * p3[1]) + ((t^3) * p4[1]);
+        return returnValue;
     }
 }
