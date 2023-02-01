@@ -35,13 +35,14 @@ uint8_t servonum = 0;
 
 //////////////////////////////////
 //DELETE WHEN DIVIDED INTO MORE FILES
-#define OFF_0               10
-#define OFF_1               15
+#define OFF_0               12
+#define OFF_1               27
 #define SHOULDER_LEGTH      107
 #define WRIST_LENGTH        105
 #define DS                  35
 #define DX                  25
 int retArray[3] = {0};
+int wArray[3] = {0};
 //////////////////////////////////////
 
 
@@ -82,20 +83,44 @@ void setup() {
     setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
     setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
     setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
+    delay(1000);
+    /*
+    for(int i = 0; i <= 50; i++){
+
+      getLegAngles(i, 0, 150);
+
+      Serial.print("Winkel Schulter:\t"); Serial.println((wArray[1]));
+      Serial.print("Winkel Steuerarm:\t"); Serial.println((wArray[2]));
+      Serial.print("Winkel Hüfte:\t"); Serial.println((wArray[0]));
+
+      int winkel[3]= {wArray[0], wArray[1], wArray[2]};
+      //int servoWerte[3] = {0};
+      transformLegAnglesToServoVals(winkel[0], winkel[1], winkel[2]);
+      //transformLegAnglesToServoVals(0, 30, 15);
+
+      Serial.print("Servowert Schulter:\t"); Serial.println(retArray[0]);
+      Serial.print("Servowert Steuerarm:\t"); Serial.println(retArray[1]);
+      Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
+
+    }
+    */
+    getLegAngles(25, 30, 150);
+
+      Serial.print("Winkel Schulter:\t"); Serial.println((wArray[1]));
+      Serial.print("Winkel Steuerarm:\t"); Serial.println((wArray[2]));
+      Serial.print("Winkel Hüfte:\t"); Serial.println((wArray[0]));
+
+      int winkel[3]= {wArray[0], wArray[1], wArray[2]};
+      //int servoWerte[3] = {0};
+      transformLegAnglesToServoVals(winkel[0], winkel[1], winkel[2]);
+      //transformLegAnglesToServoVals(0, 30, 15);
+
+      Serial.print("Servowert Schulter:\t"); Serial.println(retArray[0]);
+      Serial.print("Servowert Steuerarm:\t"); Serial.println(retArray[1]);
+      Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
     
-    getLegAngles(20, 0, 150);
 
-    Serial.print("Winkel Schulter:\t"); Serial.println(retArray[0]);
-    Serial.print("Winkel Steuerarm:\t"); Serial.println(retArray[1]);
-    Serial.print("Winkel Hüfte:\t"); Serial.println(retArray[2]);
-
-    int winkel[3]= {0, 15, 15};
-    //int servoWerte[3] = {0};
-    transformLegAnglesToServoVals(winkel[0], winkel[1], winkel[2]);
-
-    Serial.print("Servowert Schulter:\t"); Serial.println(retArray[0]);
-    Serial.print("Servowert Steuerarm:\t"); Serial.println(retArray[1]);
-    Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
+    //angleTest();
 
     //MenuSetup();
     //pwm.setPWM(0, 0, 425);
@@ -341,7 +366,7 @@ void transformLegAnglesToServoVals(int wH, int wOS, int wSA){
     //SERVOGRENZEN MÜSSEN NOCH ERMITTELT WERDEN
 
     //Diese Werte gelten nur für LINKS VORN
-    int pwm_servo2 = wH * servoStepsperDgr + 0;
+    int pwm_servo2 = wH * servoStepsperDgr + 290;
     int pwm_servo0 = wOS * servoStepsperDgr + 360;
     int pwm_servo1 = 300 - wSA * servoStepsperDgr;
 
@@ -351,7 +376,22 @@ void transformLegAnglesToServoVals(int wH, int wOS, int wSA){
     retArray[0] = pwm_servo0;
     retArray[1] = pwm_servo1;
     retArray[2] = pwm_servo2;
-    //return retArray;
+
+    //Bein 1
+    ServoPosArray[0][0] = wOS * servoStepsperDgr + 360;
+    ServoPosArray[0][1] = 300 - wSA * servoStepsperDgr;
+    ServoPosArray[0][2] = wH * servoStepsperDgr + 290;
+
+    //Bein 3
+    ServoPosArray[2][0] = wOS * servoStepsperDgr + 350;
+    ServoPosArray[2][1] = 300 - wSA * servoStepsperDgr;
+    ServoPosArray[2][2] = 300 - wH * servoStepsperDgr;
+
+    /*
+    ServoPosArray[0][0] = retArray[0];
+    ServoPosArray[0][1] = retArray[1];
+    ServoPosArray[0][2] = retArray[2];
+    */
 }
 
 //legC[0]:  x;  theta_h Rotation Hüfte
@@ -362,43 +402,68 @@ void getLegAngles(int x, int y, int z){
     //https://www.adhamelarabawy.com/pdf/IK_Model.pdf
 
     //berechnung für y-z ebene
-    int h1 = sqrt(OFF_0^2 + OFF_1^2);
-    int h2 = sqrt(z^2 + y^2);
+    //float h1 = sqrt((OFF_0^2) + (OFF_1^2));
+    float h1 = sqrt(sq(OFF_0) + sq(OFF_1));
+      //Serial.print("h1:\t"); Serial.println(h1);
 
-    int a0 = atan(y/z);
-    int a1 = atan(OFF_1/OFF_0);
-    int a2 = atan(OFF_0/OFF_1);
-    int a3 = asin((h1*sin(a2  + radians(90)))/h2);
-    int a4 = radians(90) - (a3 + a4);
-    int a5 = a1 - a4;
-    int theta_h = a0 - a5;
+    float h2 = sqrt(sq(z) + sq(y));
+      //Serial.print("h2:\t"); Serial.println(h2);
 
-    int r_0 = (h1*sin(a4)/sin(a3));
+    //float a0 = atan(abs(y)/z);
+    float a0 = atan(y/z);
+      Serial.print("a0:\t"); Serial.println(degrees(a0));
+
+    float a1 = atan(OFF_1/OFF_0);
+      Serial.print("a1:\t"); Serial.println(degrees(a1));
+
+    float a2 = atan(OFF_0/OFF_1);
+      //Serial.print("a2:\t"); Serial.println(a2);
+
+    float a3 = asin((h1*sin(a2  + radians(90)))/h2);
+      //Serial.print("a3:\t"); Serial.println(a3);
+
+    float a4 = radians(90) - (a3 + a2);
+      Serial.print("a4:\t"); Serial.println(degrees(a4));
+
+    float a5 = a1 - a4;
+      Serial.print("a5:\t"); Serial.println(degrees(a5));
+
+    float theta_h = a0 - abs(a5);
+      Serial.print("theta_h:\t"); Serial.println(degrees(theta_h));
+
+    float r_0 = (h1*sin(a4)/sin(a3));
 
     //berechnung für x-z ebene
-    int h = sqrt(r_0^2 + x^2);
-    int phi = asin(x/h);
-    int theta_s = acos((h^2 + SHOULDER_LEGTH^2 - WRIST_LENGTH^2)/(2*h * SHOULDER_LEGTH)) - phi;
-    int theta_w = acos((WRIST_LENGTH^2 + SHOULDER_LEGTH^2 - h^2)/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
+    float h = sqrt(sq(r_0) + sq(x));
+    float phi = asin(x/h);
+    float theta_s = acos((sq(h) + sq(SHOULDER_LEGTH) - sq(WRIST_LENGTH))/(2*h * SHOULDER_LEGTH)) - phi;
+    float theta_w = acos((sq(WRIST_LENGTH) + sq(SHOULDER_LEGTH) - sq(h))/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
 
-    int a6 = asin(DX/DS);                   //RAD
-    int a7 = radians(180) - (theta_s + a6); //RAD
-    int a8 = theta_s + a8;
-    int a9 = acos(DX/DS);
+    float a6 = asin(DX/DS);                   //RAD
+    float a7 = radians(180) - (theta_s + a6); //RAD
+    float a8 = theta_s + a6;
+    float a9 = acos(DX/DS);
 
-    int thetaStandardAngle = radians(60);
-    int theta_sa = radians(180) - (a8 + a9);
-    int theta_sa_corr = thetaStandardAngle - theta_sa;
+    float thetaStandardAngle = radians(60);
+    float theta_sa = radians(180) - (a8 + a9);
+    float theta_sa_corr = thetaStandardAngle - theta_sa;
     
     //int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
     //return returnArray;
-    retArray[0] = theta_h;
-    retArray[1] = theta_s;
-    retArray[2] = theta_sa_corr;
+    wArray[0] = degrees(theta_h);
+    wArray[1] = degrees(theta_s);
+    wArray[2] = degrees(theta_sa_corr);
+    //wArray[2] = degrees(theta_sa);
 }
 
 void angleTest(){
-
+  //einfache Tests zu bewegungen eines einzelnen Beins
+  for(int i = 0; i <= 50; i++){
+    getLegAngles(0, 0, 100 + i);
+    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    confirmPos();
+    delay(10);
+  }
 }
 
 //Funtions written by Dawid END

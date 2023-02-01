@@ -7,10 +7,10 @@
 //beinhaltte alle Werte der Servos aller Beine
 int ServoPosArray[4][3] = 
 { 
-    360,    300,    300,
-    260,    270,    305,
-    400,    400,    290,  
-    235,    235,    310    
+    360,    300,    290,    //Zahl kleiner -> Winkel kleiner;   Zahl kleiner -> Winkel größer
+    300,    350,    305,    //Zahl kleiner -> Winkel größer;    Zahl kleiner -> Winkel kleiner
+    350,    300,    300,    //Zahl kleiner -> Winkel kleiner;   Zahl kleiner -> Winkel größer
+    300,    340,    305     //Zahl kleiner -> Winkel größer;    Zahl kleiner -> Winkel kleiner    
 };
 
 int ServoPosArrayforward[4][3] = 
