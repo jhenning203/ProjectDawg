@@ -3,13 +3,11 @@
 #include <math.h>
 
 #define DEBUGACTIVE 01
-#define SERVOMIN  150   // This is the 'minimum' pulse length count (out of 4096)
-#define SERVOMAX  600   // This is the 'maximum' pulse length count (out of 4096)
 
 //beinhaltte alle Werte der Servos aller Beine
 int ServoPosArray[4][3] = 
 { 
-    410,    370,    300,
+    360,    300,    300,
     260,    270,    305,
     400,    400,    290,  
     235,    235,    310    

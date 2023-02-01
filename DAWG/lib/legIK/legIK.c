@@ -20,7 +20,7 @@ int* getLegAngles(int* legC){
     int a0 = atan(legC[1]/legC[2]);
     int a1 = atan(OFF_1/OFF_0);
     int a2 = atan(OFF_0/OFF_1);
-    int a3 = asin((h1*sin(a2  +radians(90)))/h2);
+    int a3 = asin((h1*sin(a2  + radians(90)))/h2);
     int a4 = radians(90) - (a3 + a4);
     int a5 = a1 - a4;
     int theta_h = a0 - a5;
@@ -41,11 +41,13 @@ int* getLegAngles(int* legC){
     int thetaStandardAngle = radians(60);
     int theta_sa = radians(180) - (a8 + a9);
     int theta_sa_corr = thetaStandardAngle - theta_sa;
+    //
     int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
     return returnArray;
 }
 
 //Transformation von 3 Winekln in ° in PWM Servo-Werte
+//bisher nur für linkes Bein Vorn
 int* transformLegAnglesToServoVals(int* legA){
     int servoStepsperDgr = 450/200;
 
@@ -53,9 +55,9 @@ int* transformLegAnglesToServoVals(int* legA){
     //SERVOGRENZEN MÜSSEN NOCH ERMITTELT WERDEN
 
     //anstelle von dummy muss Konstante zum umrechnen von Winkeln in pwm-schritte eingefügt werden
-    int pwm_servo2 = legA[0] * servoStepsperDgr + SERVOMIN;
-    int pwm_servo0 = legA[1] * servoStepsperDgr + SERVOMIN;
-    int pwm_servo1 = legA[2] * servoStepsperDgr + SERVOMIN;
+    int pwm_servo2 = legA[0] * servoStepsperDgr + 0;
+    int pwm_servo0 = legA[1] * servoStepsperDgr + 360;
+    int pwm_servo1 = 300 - legA[2] * servoStepsperDgr;
 
     int returnArray[3] = {pwm_servo0, pwm_servo1, pwm_servo2};
     return returnArray;

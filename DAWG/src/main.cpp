@@ -7,6 +7,7 @@
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
+int returnArray[3] = {0, 0, 0};
 uint8_t servonum = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,12 +33,25 @@ uint8_t servonum = 0;
 //#define S0_R_UNTEN        
 #define S2_MITTELSTELLUNG 290
 
+//////////////////////////////////
+//DELETE WHEN DIVIDED INTO MORE FILES
+#define OFF_0               10
+#define OFF_1               15
+#define SHOULDER_LEGTH      107
+#define WRIST_LENGTH        105
+#define DS                  35
+#define DX                  25
+//////////////////////////////////////
+
 void MenuSetup();
 void showServoValuesToConcole();
 void setServoPositionFromConsole(int servonum);
 void setLegPositionFromConsole(int servonum);
 void setLegPosition(int leg, int servo0, int servo1, int servo2);
 void standupDaw();
+int* getLegAngles(int* legC);
+int* transformLegAnglesToServoVals(int* legA);
+void angleTest();
 
 void walkforeward();
 void takeastep (int leg);
@@ -66,6 +80,14 @@ void setup() {
     setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
     setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
     setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
+    
+    int winkel[3] = {0, 15, 15};
+    int* servoWerte = transformLegAnglesToServoVals(winkel);
+
+    Serial.print("Servowert Schulter:\t"); Serial.println(servoWerte[0]);
+    Serial.print("Servowert Steuerarm:\t"); Serial.println(servoWerte[1]);
+    Serial.print("Servowert Hüfte:\t"); Serial.println(servoWerte[3]);
+
     //MenuSetup();
     //pwm.setPWM(0, 0, 425);
     //pwm.setPWM(1,0,425);
@@ -301,6 +323,68 @@ void standupDaw(){
     pulslenright = pulslenright + 1;
     //delay(4);
   }
+}
+
+//legC[0]:  x;  theta_h Rotation Hüfte
+//legC[1]:  y;  theta_s rotation oberschenkel
+//legC[2]:  z;  theta_w Rotation Unterschenkel
+int* getLegAngles(int* legC){
+    //für berechnung siehe
+    //https://www.adhamelarabawy.com/pdf/IK_Model.pdf
+
+    //berechnung für y-z ebene
+    int h1 = sqrt(OFF_0^2 + OFF_1^2);
+    int h2 = sqrt(legC[2]^2 + legC[1]^2);
+
+    int a0 = atan(legC[1]/legC[2]);
+    int a1 = atan(OFF_1/OFF_0);
+    int a2 = atan(OFF_0/OFF_1);
+    int a3 = asin((h1*sin(a2  + radians(90)))/h2);
+    int a4 = radians(90) - (a3 + a4);
+    int a5 = a1 - a4;
+    int theta_h = a0 - a5;
+
+    int r_0 = (h1*sin(a4)/sin(a3));
+
+    //berechnung für x-z ebene
+    int h = sqrt(r_0^2 + legC[0]^2);
+    int phi = asin(legC[0]/h);
+    int theta_s = acos((h^2 + SHOULDER_LEGTH^2 - WRIST_LENGTH^2)/(2*h * SHOULDER_LEGTH)) - phi;
+    int theta_w = acos((WRIST_LENGTH^2 + SHOULDER_LEGTH^2 - h^2)/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
+
+    int a6 = asin(DX/DS);                   //RAD
+    int a7 = radians(180) - (theta_s + a6); //RAD
+    int a8 = theta_s + a8;
+    int a9 = acos(DX/DS);
+
+    int thetaStandardAngle = radians(60);
+    int theta_sa = radians(180) - (a8 + a9);
+    int theta_sa_corr = thetaStandardAngle - theta_sa;
+    //
+    int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
+    return returnArray;
+}
+
+//Transformation von 3 Winekln in ° in PWM Servo-Werte
+//bisher nur für linkes Bein Vorn
+int* transformLegAnglesToServoVals(int* legA){
+  
+    int servoStepsperDgr = 450/200;
+
+    //bisher nicht funktional für rechte Seite von DAWG !!
+    //SERVOGRENZEN MÜSSEN NOCH ERMITTELT WERDEN
+
+    //anstelle von dummy muss Konstante zum umrechnen von Winkeln in pwm-schritte eingefügt werden
+    int pwm_servo2 = legA[0] * servoStepsperDgr + 0;
+    int pwm_servo0 = legA[1] * servoStepsperDgr + 360;
+    int pwm_servo1 = 300 - legA[2] * servoStepsperDgr;
+
+    returnArray = {pwm_servo0, pwm_servo1, pwm_servo2};
+    return returnArray;
+}
+
+void angleTest(){
+
 }
 
 /*

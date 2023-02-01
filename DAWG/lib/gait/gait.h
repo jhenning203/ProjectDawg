@@ -2,7 +2,7 @@
 //save gait patterns here 
 //Walking
 
-#include "defines.h"
+#include "utils.h"
 
 #ifndef GAIT_H
 #define GAIT_H
