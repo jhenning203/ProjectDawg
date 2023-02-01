@@ -41,24 +41,33 @@ int* getLegAngles(int* legC){
     int thetaStandardAngle = radians(60);
     int theta_sa = radians(180) - (a8 + a9);
     int theta_sa_corr = thetaStandardAngle - theta_sa;
-    //
-    int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
-    return returnArray;
+    
+    //int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
+    //return returnArray;
+    retArray[0] = theta_h;
+    retArray[1] = theta_s;
+    retArray[2] = theta_sa_corr;
+
+    return retArray;
 }
 
 //Transformation von 3 Winekln in ° in PWM Servo-Werte
 //bisher nur für linkes Bein Vorn
-int* transformLegAnglesToServoVals(int* legA){
+int* transformLegAnglesToServoVals(int legA[3]){
     int servoStepsperDgr = 450/200;
 
     //bisher nicht funktional für rechte Seite von DAWG !!
     //SERVOGRENZEN MÜSSEN NOCH ERMITTELT WERDEN
 
-    //anstelle von dummy muss Konstante zum umrechnen von Winkeln in pwm-schritte eingefügt werden
+    //Diese Werte gelten nur für LINKS VORN
     int pwm_servo2 = legA[0] * servoStepsperDgr + 0;
     int pwm_servo0 = legA[1] * servoStepsperDgr + 360;
     int pwm_servo1 = 300 - legA[2] * servoStepsperDgr;
 
-    int returnArray[3] = {pwm_servo0, pwm_servo1, pwm_servo2};
-    return returnArray;
+    //int returnArray[3] = {pwm_servo0, pwm_servo1, pwm_servo2};
+    //return returnArray;
+    retArray[0] = pwm_servo0;
+    retArray[1] = pwm_servo1;
+    retArray[2] = pwm_servo2;
+    return retArray;
 }
