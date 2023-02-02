@@ -79,12 +79,13 @@ void setup() {
   ///////////////////////////////////////////
 
   #if DAWID
+    /*
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
     setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
     setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
     setLegPosition(4,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
-    delay(1000);
-    /*
+    delay(2000);
+    
     for(int i = 0; i <= 50; i++){
 
       getLegAngles(i, 0, 150);
@@ -103,7 +104,7 @@ void setup() {
       Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
 
     }
-    */
+    
     getLegAngles(25, 30, 150);
 
       Serial.print("Winkel Schulter:\t"); Serial.println((wArray[1]));
@@ -118,9 +119,9 @@ void setup() {
       Serial.print("Servowert Schulter:\t"); Serial.println(retArray[0]);
       Serial.print("Servowert Steuerarm:\t"); Serial.println(retArray[1]);
       Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
-    
+    */
 
-    //angleTest();
+    angleTest();
 
     //MenuSetup();
     //pwm.setPWM(0, 0, 425);
@@ -173,6 +174,7 @@ delay(1);
   //DAWID CODE
   #if DAWID 
     //setLegPositionFromConsole(0);
+    angleTest();
   #endif
   //DAWID CODE ENDE
   ////////////////////////////
@@ -380,12 +382,20 @@ void transformLegAnglesToServoVals(int wH, int wOS, int wSA){
     //Bein 1
     ServoPosArray[0][0] = wOS * servoStepsperDgr + 360;
     ServoPosArray[0][1] = 300 - wSA * servoStepsperDgr;
-    ServoPosArray[0][2] = wH * servoStepsperDgr + 290;
+    //ServoPosArray[0][2] = wH * servoStepsperDgr + 290;
+
+    //Bein 2
+    ServoPosArray[1][0] = 300 - servoStepsperDgr * wOS;
+    ServoPosArray[1][1] = servoStepsperDgr * wSA + 350;
 
     //Bein 3
     ServoPosArray[2][0] = wOS * servoStepsperDgr + 350;
     ServoPosArray[2][1] = 300 - wSA * servoStepsperDgr;
-    ServoPosArray[2][2] = 300 - wH * servoStepsperDgr;
+    //ServoPosArray[2][2] = 300 - wH * servoStepsperDgr;
+
+    //Bein 4 
+    ServoPosArray[3][0] = 300 - servoStepsperDgr * wOS;
+    ServoPosArray[3][1] = servoStepsperDgr * wSA + 340;
 
     /*
     ServoPosArray[0][0] = retArray[0];
@@ -411,10 +421,10 @@ void getLegAngles(int x, int y, int z){
 
     //float a0 = atan(abs(y)/z);
     float a0 = atan(y/z);
-      Serial.print("a0:\t"); Serial.println(degrees(a0));
+      //Serial.print("a0:\t"); Serial.println(degrees(a0));
 
     float a1 = atan(OFF_1/OFF_0);
-      Serial.print("a1:\t"); Serial.println(degrees(a1));
+      //Serial.print("a1:\t"); Serial.println(degrees(a1));
 
     float a2 = atan(OFF_0/OFF_1);
       //Serial.print("a2:\t"); Serial.println(a2);
@@ -423,13 +433,13 @@ void getLegAngles(int x, int y, int z){
       //Serial.print("a3:\t"); Serial.println(a3);
 
     float a4 = radians(90) - (a3 + a2);
-      Serial.print("a4:\t"); Serial.println(degrees(a4));
+      //Serial.print("a4:\t"); Serial.println(degrees(a4));
 
     float a5 = a1 - a4;
-      Serial.print("a5:\t"); Serial.println(degrees(a5));
+      //Serial.print("a5:\t"); Serial.println(degrees(a5));
 
     float theta_h = a0 - abs(a5);
-      Serial.print("theta_h:\t"); Serial.println(degrees(theta_h));
+      //Serial.print("theta_h:\t"); Serial.println(degrees(theta_h));
 
     float r_0 = (h1*sin(a4)/sin(a3));
 
@@ -458,11 +468,39 @@ void getLegAngles(int x, int y, int z){
 
 void angleTest(){
   //einfache Tests zu bewegungen eines einzelnen Beins
+  getLegAngles(0, 0, 125);
+  transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+  confirmPos();
+  delay(1000);
+
   for(int i = 0; i <= 50; i++){
-    getLegAngles(0, 0, 100 + i);
+    getLegAngles(0, 0, 125 + i);
+    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    confirmPos();
+    delay(1);
+  }
+  /*
+  delay(2000);
+  for(int i = 0; i <= 25; i++){
+    getLegAngles(i, 0, 175);
     transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
     confirmPos();
     delay(10);
+  }
+
+  for(int i = 0; i <= 25; i++){
+    getLegAngles(25 - i, 0, 175);
+    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    confirmPos();
+    delay(10);
+  }  
+  delay(2000);
+  */
+  for(int i = 0; i <= 50; i++){
+    getLegAngles(0,0,175 - i);
+    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    confirmPos();
+    delay(1);
   }
 }
 
