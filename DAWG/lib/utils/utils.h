@@ -7,7 +7,4 @@
 #define SERVOMAX  600   // This is the 'maximum' pulse length count (out of 4096)
 
 
-//float radians(int degree);
-
-
 #endif
