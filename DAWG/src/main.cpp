@@ -45,7 +45,6 @@ int retArray[3] = {0};
 int wArray[3] = {0};
 //////////////////////////////////////
 
-
 void MenuSetup();
 void showServoValuesToConcole();
 void setServoPositionFromConsole(int servonum);

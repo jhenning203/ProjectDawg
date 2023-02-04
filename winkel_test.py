@@ -4,14 +4,14 @@ off_0 = 11.88
 off_1 = 26.82
 
 x = 0
-y = 25
+y = 30
 z = 150
 
-s = 107
-w = 105
+s = 117
+w = 103
 ds = 35
 dx = 25
-r = 18
+r = 22
 
 print("dx_test")
 print(math.sqrt(2 * dx**2 ))
@@ -80,58 +80,8 @@ print("Theta_w:")
 print(math.degrees(theta_w))
 print(theta_w)
 
-"""
-print("Theta_w1")
-print(math.degrees(theta_w1))
-
-print("ACOS Wert theta_w:\t")
-print((w**2 + s**2 - h**2)/(2 * w * s))
-
-theta_w = math.acos((w**2 + s**2 - h**2)/(2 * w * s))
-
-
-print("ACOS Wert theta_sa:\t")
-print((math.sin(theta_w1-theta_w) * lSteuerArm)/r)
-
-theta_sa = math.asin((math.sin(theta_w1-theta_w) * lSteuerArm)/r)
-"""
-
-e = math.sqrt(l2**2 + l4**2 - (2 * l2 * l4 * math.cos(math.radians(180) - theta_w)))
-
-print("cos-test")
-print(math.radians(120))
-print(math.cos(math.radians(45)))
-
-print("e")
-print(e)
-gamma1 = math.acos((l4**2 + e**2 - l2**2)/(2 * l4 * e))
-
-print("gamma 1")
-print(math.degrees(gamma1))
-
-gamma2 = a7 - gamma1
-
-print("gamma 2")
-print(math.degrees(gamma2))
-
-print("cos gamma2")
-print(math.cos(gamma2))
-
-d = math.sqrt(ds**2 + e**2 - 2 * ds * e * math.cos(gamma2))
-
-print("d")
-print(d)
-
-print("Problem:")
-print(d/lSteuerArm)
-
-#theta_sa = math.asin(math.sin(math.acos(d/lSteuerArm)) * (lSteuerArm/r))
-#theta_sa = math.asin(math.sin(math.acos(0.2)) * (lSteuerArm/r))
-
-thetaStandardAngle = math.radians(60)
-
-theta_sa = math.radians(180) - (a8 + a9)
-theta_sa_corr = thetaStandardAngle - theta_sa
+theta_g = math.radians(180) - (theta_s + theta_w)
+theta_sa = math.radians(90) - theta_g
 
 print("Hüftwinkel:\t")
 print(math.degrees(theta_h))
@@ -139,5 +89,4 @@ print("Schulterwinkel:\t")
 print(math.degrees(theta_s))
 print("Steuerwinkel:\t")
 print(math.degrees(theta_sa))
-print("Steuerwinkel korrigiert:")
-print(math.degrees(theta_sa_corr))
+
