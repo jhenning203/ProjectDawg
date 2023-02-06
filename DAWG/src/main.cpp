@@ -82,8 +82,10 @@ void setup() {
 
   #if DAWID
 
-    angleTest();
+    //angleTest();
     //walkingGaitLF();
+
+    setLegPosition(1, 270, 300, 300);
 
     /*
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
@@ -129,7 +131,7 @@ void setup() {
 
     
 
-    //MenuSetup();
+    MenuSetup();
     //pwm.setPWM(0, 0, 425);
     //pwm.setPWM(1,0,425);
     //pwm.setPWM(2,0,290);
@@ -179,7 +181,7 @@ delay(1);
   /////////////////////////////
   //DAWID CODE
   #if DAWID 
-    //setLegPositionFromConsole(0);
+    setLegPositionFromConsole(0);
     //angleTest();
   #endif
   //DAWID CODE ENDE
