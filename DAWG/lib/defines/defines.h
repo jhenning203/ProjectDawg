@@ -13,6 +13,11 @@ int ServoPosArray[4][3] =
     300,    340,    305     //Zahl kleiner -> Winkel größer;    Zahl kleiner -> Winkel kleiner    
 };
 
+
+
+///////////////////////////////////////////////////
+//Werte Vincent ab hier 
+
 int ServoPosArrayforward[4][3] = 
 { 
     390,    350,    290,
@@ -29,6 +34,13 @@ int ServoPosArrayback[4][3] =
     205,    110,    300    
 };
 
+int ServoPosArrayStandardVincent[4][3]=
+{
+    425,    425,    290,
+    235,    225,    315,
+    415,    425,    300,   
+    230,    225,    300,
+};
 
 //standard values for reference
 /*
