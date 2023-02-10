@@ -2,7 +2,7 @@
 //#include "utils.h"
 #include <math.h>
 
-#define DEBUGACTIVE 01
+#define DEBUGACTIVE 0
 
 //beinhaltte alle Werte der Servos aller Beine
 int ServoPosArray[4][3] = 

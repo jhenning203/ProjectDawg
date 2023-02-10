@@ -3,7 +3,7 @@
 #include <Adafruit_PWMServoDriver.h>
 #include "defines.h"
 //#include "legIK.h"
-//#include "gait.h"
+#include "gait.h"
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 int returnArray[3] = {0, 0, 0};
@@ -45,16 +45,18 @@ int retArray[3] = {0};
 int wArray[3] = {0};
 //////////////////////////////////////
 
-
 void MenuSetup();
 void showServoValuesToConcole();
 void setServoPositionFromConsole(int servonum);
 void setLegPositionFromConsole(int servonum);
 void setLegPosition(int leg, int servo0, int servo1, int servo2);
+int bezierCurveN3(int coordinate, int t);
 void standupDaw();
 void getLegAngles(int x, int y, int z);
 void transformLegAnglesToServoVals(int wH, int wOS, int wSA);
+void transformLegAnglesToSVSingle(int leg, int wH, int wOS, int wSA);
 void angleTest();
+void walkingGaitLF();
 
 void walkforeward();
 void takeastep (int leg);
@@ -79,6 +81,12 @@ void setup() {
   ///////////////////////////////////////////
 
   #if DAWID
+
+    //angleTest();
+    //walkingGaitLF();
+
+    setLegPosition(1, 270, 300, 300);
+
     /*
     setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
     setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
@@ -121,9 +129,9 @@ void setup() {
       Serial.print("Servowert Hüfte:\t"); Serial.println(retArray[2]);
     */
 
-    angleTest();
+    
 
-    //MenuSetup();
+    MenuSetup();
     //pwm.setPWM(0, 0, 425);
     //pwm.setPWM(1,0,425);
     //pwm.setPWM(2,0,290);
@@ -179,8 +187,8 @@ delay(1);
   /////////////////////////////
   //DAWID CODE
   #if DAWID 
-    //setLegPositionFromConsole(0);
-    angleTest();
+    setLegPositionFromConsole(0);
+    //angleTest();
   #endif
   //DAWID CODE ENDE
   ////////////////////////////
@@ -322,6 +330,25 @@ void setLegPosition(int leg, int servo0, int servo1, int servo2){
   pwm.setPWM(servobyleg+2,0,servo2);
 }
 
+//time € {0;1}
+//coordinate: 0 = x; 1 = y
+int bezierCurveN3(int coordinate, int t){
+    //%C(t) = (1-t)^3 * p0 + 3 * t * (1-t)^2 * p1 + 3 * t^2 * (1-t) * p2 + t^3 * p3;
+    //P1 (-20|0) in Millimetern
+    //P2 (-20|40)
+    //P3 (20|40)
+    //P4 (20|0)
+    int returnValue = 0;
+    if(coordinate == 0){
+        returnValue = ((1-t)^3 * p1[0]) + (3 * t * (1-t)^2 * p2[0]) + (3 * t^2 * (1-t) * p3[0]) + (t^3 * p4[0]);
+        return returnValue;
+    }
+    else{
+        returnValue = ((1-t)^3 * p1[1]) + (3 * t * ((1-t)^2) * p2[1]) + (3 * t^2 * (1-t) * p3[1]) + ((t^3) * p4[1]);
+        return returnValue;
+    }
+}
+
 void standupDaw(){
   int Servoleft0 = 495;
   int Servoleft1 = 330;
@@ -369,8 +396,6 @@ void standupDaw(){
 
 void transformLegAnglesToServoVals(int wH, int wOS, int wSA){
     int servoStepsperDgr = 450/200;
-
-    //bisher nicht funktional für rechte Seite von DAWG !!
     //SERVOGRENZEN MÜSSEN NOCH ERMITTELT WERDEN
 
     //Diese Werte gelten nur für LINKS VORN
@@ -410,6 +435,35 @@ void transformLegAnglesToServoVals(int wH, int wOS, int wSA){
     */
 }
 
+void transformLegAnglesToSVSingle(int leg, int wH, int wOS, int wSA){
+  int servoStepsperDgr = 450/200;
+  if(leg == 1){
+    //Bein 1
+    ServoPosArray[0][0] = wOS * servoStepsperDgr + 360;
+    ServoPosArray[0][1] = 300 - wSA * servoStepsperDgr;
+    //ServoPosArray[0][2] = wH * servoStepsperDgr + 290;
+  }
+
+  else if(leg == 2){
+    //Bein 2
+    ServoPosArray[1][0] = 300 - servoStepsperDgr * wOS;
+    ServoPosArray[1][1] = servoStepsperDgr * wSA + 350;
+  }
+
+  else if (leg == 3){
+    //Bein 3
+    ServoPosArray[2][0] = wOS * servoStepsperDgr + 350;
+    ServoPosArray[2][1] = 300 - wSA * servoStepsperDgr;
+    //ServoPosArray[2][2] = 300 - wH * servoStepsperDgr;
+  }
+
+  else if(leg == 4){
+    //Bein 4 
+    ServoPosArray[3][0] = 300 - servoStepsperDgr * wOS;
+    ServoPosArray[3][1] = servoStepsperDgr * wSA + 340;
+  }
+}
+
 //legC[0]:  x;  theta_h Rotation Hüfte
 //legC[1]:  y;  theta_s rotation oberschenkel
 //legC[2]:  z;  theta_w Rotation Unterschenkel
@@ -417,53 +471,113 @@ void getLegAngles(int x, int y, int z){
     //für berechnung siehe
     //https://www.adhamelarabawy.com/pdf/IK_Model.pdf
 
+    float s = SHOULDER_LEGTH;
+    float w = WRIST_LENGTH;
+    float dx = DX;
+    float ds = DS;
+    float off0 = OFF_0;
+    float off1 = OFF_1;
+
     //berechnung für y-z ebene
     //float h1 = sqrt((OFF_0^2) + (OFF_1^2));
-    float h1 = sqrt(sq(OFF_0) + sq(OFF_1));
-      //Serial.print("h1:\t"); Serial.println(h1);
+    float h1 = sqrt(sq(off0) + sq(off1));
+      #if DEBUGACTIVE
+        Serial.print("h1:\t"); Serial.println(h1);
+      #endif
 
     float h2 = sqrt(sq(z) + sq(y));
-      //Serial.print("h2:\t"); Serial.println(h2);
-
+      #if DEBUGACTIVE
+        Serial.print("h2:\t"); Serial.println(h2);
+      #endif
     //float a0 = atan(abs(y)/z);
     float a0 = atan(y/z);
-      //Serial.print("a0:\t"); Serial.println(degrees(a0));
+    #if DEBUGACTIVE
+      Serial.print("a0:\t"); Serial.println(degrees(a0));
+    #endif
 
-    float a1 = atan(OFF_1/OFF_0);
-      //Serial.print("a1:\t"); Serial.println(degrees(a1));
+    float a1 = atan(off1/off0);
+      #if DEBUGACTIVE
+        Serial.print("a1:\t"); Serial.println(degrees(a1));
+      #endif
 
-    float a2 = atan(OFF_0/OFF_1);
-      //Serial.print("a2:\t"); Serial.println(a2);
+    float a2 = atan(off0/off1);
+      #if DEBUGACTIVE
+        Serial.print("a2:\t"); Serial.println(a2);
+      #endif
 
     float a3 = asin((h1*sin(a2  + radians(90)))/h2);
-      //Serial.print("a3:\t"); Serial.println(a3);
+      #if DEBUGACTIVE
+        Serial.print("a3:\t"); Serial.println(a3);
+      #endif
 
     float a4 = radians(90) - (a3 + a2);
-      //Serial.print("a4:\t"); Serial.println(degrees(a4));
+      #if DEBUGACTIVE
+        Serial.print("a4:\t"); Serial.println(degrees(a4));
+      #endif
 
     float a5 = a1 - a4;
-      //Serial.print("a5:\t"); Serial.println(degrees(a5));
+      #if DEBUGACTIVE
+        Serial.print("a5:\t"); Serial.println(degrees(a5));
+      #endif
 
-    float theta_h = a0 - abs(a5);
-      //Serial.print("theta_h:\t"); Serial.println(degrees(theta_h));
+    float theta_h = a0 - a5;
+      #if DEBUGACTIVE
+        Serial.print("theta_h:\t"); Serial.println(degrees(theta_h));
+      #endif
 
     float r_0 = (h1*sin(a4)/sin(a3));
+      #if DEBUGACTIVE
+        Serial.print("r_0:\t"); Serial.println(r_0);
+      #endif
 
     //berechnung für x-z ebene
     float h = sqrt(sq(r_0) + sq(x));
     float phi = asin(x/h);
-    float theta_s = acos((sq(h) + sq(SHOULDER_LEGTH) - sq(WRIST_LENGTH))/(2*h * SHOULDER_LEGTH)) - phi;
-    float theta_w = acos((sq(WRIST_LENGTH) + sq(SHOULDER_LEGTH) - sq(h))/(2 * WRIST_LENGTH * SHOULDER_LEGTH));
 
-    float a6 = asin(DX/DS);                   //RAD
+    float theta_s = acos((sq(h) + sq(s) - sq(w))/(2*h * s)) - phi;
+      #if DEBUGACTIVE
+        Serial.print("theta_s:\t"); Serial.println(degrees(theta_s));
+      #endif
+
+    float theta_w = acos((sq(w) + sq(s) - sq(h))/(2 * w * s));
+      #if DEBUGACTIVE
+        Serial.print("theta_w:\t"); Serial.println(degrees(theta_w));
+      #endif
+
+    double a6Val = dx/ds;
+      #if DEBUGACTIVE
+        Serial.print("DX/DS:\t"); Serial.println((a6Val));
+      #endif
+    float a6 = asin(a6Val);                   //RAD
+      #if DEBUGACTIVE
+        Serial.print("a6:\t"); Serial.println(degrees(a6));
+      #endif
+
     float a7 = radians(180) - (theta_s + a6); //RAD
+      #if DEBUGACTIVE
+        Serial.print("a7:\t"); Serial.println(degrees(a7));
+      #endif
+
     float a8 = theta_s + a6;
-    float a9 = acos(DX/DS);
+      #if DEBUGACTIVE
+        Serial.print("a8:\t"); Serial.println(degrees(a8));
+      #endif
+
+    float a9 = acos(dx/ds);
+      #if DEBUGACTIVE
+        Serial.print("a9:\t"); Serial.println(degrees(a9));
+      #endif
 
     float thetaStandardAngle = radians(60);
     float theta_sa = radians(180) - (a8 + a9);
+      #if DEBUGACTIVE
+        Serial.print("theta_sa:\t"); Serial.println(degrees(theta_sa));
+      #endif
+
     float theta_sa_corr = thetaStandardAngle - theta_sa;
-    
+      #if DEBUGACTIVE
+        Serial.print("theta_sa_corr:\t"); Serial.println(degrees(theta_sa_corr));
+      #endif
     //int returnArray[3] = {theta_h, theta_s, theta_sa_corr};
     //return returnArray;
     wArray[0] = degrees(theta_h);
@@ -474,42 +588,80 @@ void getLegAngles(int x, int y, int z){
 
 void angleTest(){
   //einfache Tests zu bewegungen eines einzelnen Beins
-  getLegAngles(0, 0, 125);
-  transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+  /*
+  getLegAngles(50, 0, 175);
+  transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
+  confirmPos();
+
+  
+  transformLegAnglesToSVSingle(1, 0, 30, 30);
   confirmPos();
   delay(1000);
+  transformLegAnglesToSVSingle(2, 0, 30, 30);
+  confirmPos();
+  delay(1000);
+  transformLegAnglesToSVSingle(3, 0, 30, 30);
+  confirmPos();
+  delay(1000);
+  transformLegAnglesToSVSingle(4, 0, 30, 30);
+  confirmPos();
+  delay(1000);
+  //confirmPos();
+  //delay(1000);
+*/
 
   for(int i = 0; i <= 50; i++){
     getLegAngles(0, 0, 125 + i);
-    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
     confirmPos();
-    delay(1);
+    delay(10);
   }
-  /*
-  delay(2000);
-  for(int i = 0; i <= 25; i++){
+  
+  delay(1000);
+  for(int i = 0; i <= 50; i++){
     getLegAngles(i, 0, 175);
-    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
     confirmPos();
     delay(10);
   }
 
-  for(int i = 0; i <= 25; i++){
-    getLegAngles(25 - i, 0, 175);
-    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+  for(int i = 0; i <= 50; i++){
+    getLegAngles(50, 0, 175 - i);
+    transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
     confirmPos();
     delay(10);
   }  
-  delay(2000);
-  */
+  delay(1000);
+  
   for(int i = 0; i <= 50; i++){
-    getLegAngles(0,0,175 - i);
-    transformLegAnglesToServoVals(wArray[0], wArray[1], wArray[2]);
+    getLegAngles(50 - i, 0, 125);
+    transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
     confirmPos();
-    delay(1);
+    delay(10);
   }
+  
 }
 
+void walkingGaitLF(){
+  getLegAngles(50, 0, 150);
+  transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
+  confirmPos();
+  delay(2000);
+  /*
+  for(int i = 0; i <= 100; i++){
+    float t = (float)i/10;
+    getLegAngles(bezierCurveN3(0,t), 0, bezierCurveN3(1, t));
+    transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
+    confirmPos();
+    delay(100);
+  }
+
+  getLegAngles(0, 0, 150);
+  transformLegAnglesToSVSingle(1, wArray[0], wArray[1], wArray[2]);
+  confirmPos();
+  delay(2000);
+  */
+}
 //Funtions written by Dawid END
 ////////////////////////////////////////////////////////////////
 

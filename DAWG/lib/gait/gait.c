@@ -4,6 +4,7 @@
 //für bestimmte Koordinate
 //zu bestimmtem Zeitpunkt
 
+/*
 //time € {0;1}
 //coordinate: 0 = x; 1 = y
 int bezierCurveN3(int coordinate, int t){
@@ -22,3 +23,4 @@ int bezierCurveN3(int coordinate, int t){
         return returnValue;
     }
 }
+*/
