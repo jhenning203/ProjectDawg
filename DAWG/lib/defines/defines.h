@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define DEBUGACTIVE 0
-
+/*
 //beinhaltte alle Werte der Servos aller Beine
 int ServoPosArray[4][3] = 
 { 
@@ -12,7 +12,7 @@ int ServoPosArray[4][3] =
     350,    300,    300,    //Zahl kleiner -> Winkel kleiner;   Zahl kleiner -> Winkel größer
     300,    340,    305     //Zahl kleiner -> Winkel größer;    Zahl kleiner -> Winkel kleiner    
 };
-
+*/
 
 
 ///////////////////////////////////////////////////
@@ -28,22 +28,22 @@ int ServoPosArrayforward[4][3] =
 
 int ServoPosArrayback[4][3] = 
 { 
-    445,    500,    290,
-    215,    110,    315,
-    430,    500,    300,  
-    205,    110,    300    
+    445,    500,    295,
+    220,    110,    310,
+    430,    500,    295,  
+    215,    110,    305    
 };
 
 int ServoPosArrayStandardVincent[4][3]=
 {
-    425,    425,    290,
-    235,    225,    315,
-    415,    425,    300,   
-    230,    225,    300,
+    435,    425,    295,
+    235,    225,    310,
+    415,    425,    295,   
+    230,    225,    305,
 };
 
 //standard values for reference
-/*
+
 int ServoPosArray[4][3] = 
 { 
     425,    425,    290,
@@ -51,4 +51,3 @@ int ServoPosArray[4][3] =
     415,    425,    300,  
     225,    225,    300    
 };
-*/

@@ -66,6 +66,7 @@ void punch();
 void standardpos(int leg);
 void walkingexperiment();
 void step();
+void stepexperiment();
 
 void setup() {
   ////////////////////////////////////////////////////
@@ -142,19 +143,20 @@ void setup() {
   #endif
 
   #if VINCENT
-  //step();
-  //delay(2000);
+
   /*
-    setLegPosition(1,ServoPosArray[0][0],ServoPosArray[0][1],ServoPosArray[0][2]);
-    setLegPosition(2,ServoPosArray[1][0],ServoPosArray[1][1],ServoPosArray[1][2]);
-    setLegPosition(3,ServoPosArray[2][0],ServoPosArray[2][1],ServoPosArray[2][2]);
-    setLegPosition(3,ServoPosArray[3][0],ServoPosArray[3][1],ServoPosArray[3][2]);
-  */
+  
+    setLegPosition(1,ServoPosArrayStandardVincent[0][0],ServoPosArrayStandardVincent[0][1],ServoPosArrayStandardVincent[0][2]);
+    setLegPosition(2,ServoPosArrayStandardVincent[1][0],ServoPosArrayStandardVincent[1][1],ServoPosArrayStandardVincent[1][2]);
+    setLegPosition(3,ServoPosArrayStandardVincent[2][0],ServoPosArrayStandardVincent[2][1],ServoPosArrayStandardVincent[2][2]);
+    setLegPosition(4,ServoPosArrayStandardVincent[3][0],ServoPosArrayStandardVincent[3][1],ServoPosArrayStandardVincent[3][2]);
+    
+  
     setLegPosition(1,ServoPosArrayback[0][0],ServoPosArrayback[0][1],ServoPosArrayback[0][2]);
     setLegPosition(2,ServoPosArrayback[1][0],ServoPosArrayback[1][1],ServoPosArrayback[1][2]);
     setLegPosition(3,ServoPosArrayback[2][0],ServoPosArrayback[2][1],ServoPosArrayback[2][2]);
     setLegPosition(4,ServoPosArrayback[3][0],ServoPosArrayback[3][1],ServoPosArrayback[3][2]);
-    
+    */
   #endif
   delay(10);
 }
@@ -170,6 +172,9 @@ void loop() {
   /////////////////////////////
   //@VINCENT DEIN CODE HIER REIN
   #if VINCENT 
+//stepexperiment();
+//delay(1000);
+
   /*
  step();
  delay(1);
@@ -354,6 +359,7 @@ void standupDaw(){
   int Servoleft1 = 330;
   int Servoright0 = 155;
   int Servoright1 = 320;
+
 
   // setting all servos into down position 
   // maybe include setting 3 servo for hip rotation into default position
@@ -677,7 +683,119 @@ void walkforeward() {
     delay(1000);
 }
 
+void stepexperiment(){
+pwm.setPWM(2,0,ServoPosArrayStandardVincent[0][2]);
+pwm.setPWM(6,0,ServoPosArrayStandardVincent[1][2]);
+pwm.setPWM(10,0,ServoPosArrayStandardVincent[2][2]);
+pwm.setPWM(14,0,ServoPosArrayStandardVincent[3][2]);
+int Hilfsvariableleg1_O = ServoPosArrayStandardVincent[0][1];
+int Hilfsvariableleg1_U = ServoPosArrayStandardVincent[0][0];
+int Hilfsvariableleg2_O = ServoPosArrayStandardVincent[1][1];
+int Hilfsvariableleg2_U = ServoPosArrayStandardVincent[1][0];
+int Hilfsvariableleg3_O = ServoPosArrayStandardVincent[2][1];
+int Hilfsvariableleg3_U = ServoPosArrayStandardVincent[2][0];
+int Hilfsvariableleg4_O = ServoPosArrayStandardVincent[3][1];
+int Hilfsvariableleg4_U = ServoPosArrayStandardVincent[3][0];
+//For-Schleife läuft durch und jedes bein wird soweit bewegt wie nötig
+for(int laufvariable = 0 ; laufvariable < 150; laufvariable ++){
+  // Bein 1 
+  if(Hilfsvariableleg1_O <= ServoPosArrayback[0][1]){
+    pwm.setPWM(1,0,Hilfsvariableleg1_O);
+  }
+  if(Hilfsvariableleg1_U <= ServoPosArrayback[0][0]){
+    pwm.setPWM(0,0,Hilfsvariableleg1_U);
+  }
+  // Bein 2 
+  if(Hilfsvariableleg2_O >= ServoPosArrayback[1][1]){
+    pwm.setPWM(5,0,Hilfsvariableleg2_O);
+  }
+  if(Hilfsvariableleg2_U >= ServoPosArrayback[1][0]){
+    pwm.setPWM(4,0,Hilfsvariableleg2_U);
+  }
+  // Bein 3 
+  if(Hilfsvariableleg3_O <= ServoPosArrayback[2][1]){
+    pwm.setPWM(9,0,Hilfsvariableleg3_O);
+  }
+  if(Hilfsvariableleg3_U <= ServoPosArrayback[2][0]){
+    pwm.setPWM(8,0,Hilfsvariableleg3_U);
+  }
+  // Bein 4 
+  if(Hilfsvariableleg4_O >= ServoPosArrayback[3][1]){
+    pwm.setPWM(13,0,Hilfsvariableleg4_O);
+  }
+  if(Hilfsvariableleg4_U >= ServoPosArrayback[3][0]){
+    pwm.setPWM(12,0,Hilfsvariableleg4_U);
+  }
+  Hilfsvariableleg1_O ++;
+  Hilfsvariableleg1_U ++;
+  Hilfsvariableleg2_O --;
+  Hilfsvariableleg2_U -=2;
+  Hilfsvariableleg3_O ++;
+  Hilfsvariableleg3_U ++;
+  Hilfsvariableleg4_O --;
+  Hilfsvariableleg4_U -=2;
+  delay(1);
+}
+///////////////////////////////////////////////////////////////////////
+//Bein 1 nach vorne 
+for(int legpos = ServoPosArrayback[0][1]; legpos >= 260; legpos--){
+  pwm.setPWM(1,0,legpos);
+  delay(1);
+}
+for(int legpos = ServoPosArrayback[0][0]; legpos >= ServoPosArrayStandardVincent[2][0]; legpos--){
+  pwm.setPWM(0,0,legpos);
+  delay(1);
+}
+for(int legpos = 260; legpos <= ServoPosArrayStandardVincent[0][1]; legpos++){
+  pwm.setPWM(1,0,legpos);
+  delay(1);
+}
+// Bein 2 nach vorne  /////////////////////////////////////////////
+
+for(int legpos = ServoPosArrayback[1][1]; legpos <= 350; legpos++){
+  pwm.setPWM(5,0,legpos);
+  delay(1);
+}
+for(int legpos = ServoPosArrayback[1][0]; legpos <= ServoPosArrayStandardVincent[1][0]; legpos++){
+  pwm.setPWM(4,0,legpos);
+  delay(1);
+}
+for(int legpos = 350; legpos >= ServoPosArrayStandardVincent[1][1]; legpos--){
+  pwm.setPWM(5,0,legpos);
+ delay(1);
+}
+// Bewege bein 4 nach vorne ////////////////////////////////////////////////
+for(int legpos = ServoPosArrayback[3][1]; legpos <= 350; legpos++){
+  pwm.setPWM(13,0,legpos);
+  delay(1);
+}
+for(int legpos = ServoPosArrayback[3][0]; legpos <= ServoPosArrayStandardVincent[3][0]; legpos++){
+  pwm.setPWM(12,0,legpos);
+  delay(1);
+}
+for(int legpos = 350; legpos >= ServoPosArrayStandardVincent[3][1]; legpos--){
+  pwm.setPWM(13,0,legpos);
+  delay(1);
+}
+//Bewege bein 3 nach vorne /////////////////////////////////////////////////////
+for(int legpos = ServoPosArrayback[2][1]; legpos >= 260; legpos--){
+  pwm.setPWM(9,0,legpos);
+  delay(1);
+}
+for(int legpos = ServoPosArrayback[2][0]; legpos >= ServoPosArrayStandardVincent[2][0]; legpos--){
+  pwm.setPWM(8,0,legpos);
+  delay(1);
+}
+for(int legpos = 260; legpos <= ServoPosArrayStandardVincent[2][1]; legpos++){
+  pwm.setPWM(9,0,legpos);
+  delay(1);
+}
+}
+
+
 void step(){
+
+
   // Bein 1 
   //lift foot of the ground 
   for(int legpos = ServoPosArray[0][1]; legpos >= 190; legpos --){
@@ -779,7 +897,7 @@ for(int legpos = 260; legpos <= ServoPosArray[2][1]; legpos++){
 //delay(20);
 
 ////////////////////////////////////////////////
-// Bewege bein 4 zurück in startposition
+// Bewege bein 2 zurück in startposition
 for(int legpos = ServoPosArrayback[1][1]; legpos <= 350; legpos++){
   pwm.setPWM(5,0,legpos);
   delay(1);
